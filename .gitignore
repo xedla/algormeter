@@ -6,7 +6,6 @@ __pycache__
 playground.ipynb
 *.csv
 pics
-go-*.py
 *.pickle
 *.tex
 *.json
