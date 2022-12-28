@@ -1,0 +1,12 @@
+.DS_Store
+*.pyc
+__pycache__
+.ipynb_checkpoints
+*.npy
+playground.ipynb
+*.csv
+pics
+go-*.py
+*.pickle
+*.tex
+*.json
