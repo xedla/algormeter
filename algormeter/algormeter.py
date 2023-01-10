@@ -1,5 +1,5 @@
 '''
-AlgoMeter Main program 
+AlgorMeter Main program 
 
 Created on 9 May 2022
 
@@ -7,7 +7,7 @@ Created on 9 May 2022
 
 '''
 __all__ = ['algorMeter']
-__version__ = '0.9'
+__version__ = '0.9.2'
 __author__ = "Pietro d'Alessandro"
 
 import pandas as pd

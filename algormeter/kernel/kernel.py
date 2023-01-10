@@ -1,7 +1,6 @@
-''' AlgoMeter Kernel
+''' AlgorMeter Kernel
 '''
 __all__ = ['Kernel']
-__version__ = '0.9'
 __author__ = "Pietro d'Alessandro"
 
 import math
@@ -299,7 +298,7 @@ class Kernel:
 
 
 def sign(x):
-    # return np.sign(x)
+    return np.sign(x)
     if type(x) == np.ndarray:
         return 2. * ( x >= 0.) - 1.
     return 1. if x >= 0. else -1.

@@ -1,4 +1,4 @@
-# AlgoMeter: Tool for developing, testing and measuring optimizers algorithms
+# AlgorMeter: Tool for developing, testing and measuring optimizers algorithms
 Python benchmark suite environment for optimizer algorithms.    
 Here is a repository where you can find a python implementation of a benchmark environment for optimizer algorithms. 
 Produce comparative measures between algorithms  in csv format with effective test function call count. It has a problem function call optimization, so more calls at the same point X count only for one call. Contains a standard library implementation of convex functions and difference of convex functions.  
@@ -50,9 +50,9 @@ print('\n', pv,'\n', df)
 
 pv and df are pandas dataframe with run result. A .csv file with result is also created in csv folder. 
 
-*(see example1.py)*
+*(see example\*.py)*
 
-## AlgoMeter interface
+## AlgorMeter interface
 
 ```python
 def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, 
@@ -113,14 +113,14 @@ can be overriden like in
 ```
 
 ## Problems function call optimization
-Algometer uses a problems function call optimization system so more calls at the same point X count only for one call. So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. Algometer cache 128 previous calls to obtain such automatic optimization.
+AlgorMeter uses a problems function call optimization system so more calls at the same point X count only for one call. So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.
 ## Problems ready to use
 Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM problems list are available.    
  **probList_DCJBKM** contains ten frequently used unconstrained DC optimization problems, where objective functions are presented as DC (Difference of Convex) functions:
 𝑓(𝑥)=𝑓1(𝑥)−𝑓2(𝑥).
  [Joki, Bagirov](https://link.springer.com/article/10.1007/s10898-016-0488-3)
 
- **probList_coax**  contain DemMol,Mifflin,LQ,MAXQ,QL,CB2,CB3 convex functions
+ **probList_coax**  contains DemMol,Mifflin,LQ,MAXQ,QL,CB2,CB3 convex functions
 
  **probList_base** contains ParAbs, Acad simple functions for algorithms early test.  
 
@@ -184,16 +184,16 @@ In case you need to find the minimum of a problem/function by applying an algori
 Running visualizer.py produce or updates contour image in folder 'pics' for each experiment with dimension = 2 with data in folder 'npy'.
 
 # Acknowledgment
-Algometer was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
+Algormeter was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
 # Contributing
 You can download or fork the repository freely. If you see a mistake you can send me a mail at pietrodalessandro@gmail.com 
 If you open up a ticket, please make sure it describes the problem or feature request fully.
 Any suggestion are welcome.
 # WARNING
-AlgoMeter is still in the early stages of development. 
+AlgorMeter is still in the early stages of development. 
 
 # License
-**If you use AlgoMeter for the preparation of a scientific paper, the citation with a link to this repository would be appreciated.**
+**If you use AlgorMeter for the preparation of a scientific paper, the citation with a link to this repository would be appreciated.**
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -208,4 +208,4 @@ Package installable with pip3
 - pandas
 - matplotlib
 
-Algometer plays well with [Visual Studio Code](https://code.visualstudio.com) and in jupyter
+Algormeter plays well with [Visual Studio Code](https://code.visualstudio.com) and in jupyter
