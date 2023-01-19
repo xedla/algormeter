@@ -4,8 +4,10 @@ __all__ = ['Kernel']
 __author__ = "Pietro d'Alessandro"
 
 import math
+import os
 from typing import Optional, Callable
 import numpy as np
+from numpy import sign
 import timeit  as tm
 from algormeter.tools import counter, dbx
 
@@ -212,7 +214,10 @@ class Kernel:
         if self.savedata:
             self.data.resize(self.K,self.dimension+1,refcheck=False)
             label = '' if self.label == '' else self.label + ','
-            np.save(f'./npy/{label}{repr(self)}',self.data)
+            dir = './npy/'
+            if not os.path.isdir(dir):
+                os.mkdir(dir)
+            np.save(f'{dir}{label}{repr(self)}',self.data)
 
         if self.trace:
             print('\n\n')
@@ -297,8 +302,8 @@ class Kernel:
         return r
 
 
-def sign(x):
-    return np.sign(x)
-    if type(x) == np.ndarray:
-        return 2. * ( x >= 0.) - 1.
-    return 1. if x >= 0. else -1.
+# def sign(x):
+#     # return np.sign(x)
+#     if type(x) == np.ndarray:
+#         return 2. * ( x >= 0.) - 1.
+#     return 1. if x >= 0. else -1.

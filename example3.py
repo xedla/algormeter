@@ -12,7 +12,7 @@ tpar = [ # [name, [values list]]
     ('TunePar.TMIN', [i for i in np.arange(.05,1.,.05)]),
 ]
 
-
+# Nonsmooth Barzilai-Borwein (NSBB) algorithm
 def NSBB(p, **kwargs):
     def t():
         d = p.Xk - Xprev

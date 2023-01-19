@@ -1,8 +1,7 @@
 # AlgorMeter: Tool for developing, testing and measuring optimizers algorithms
-Python benchmark suite environment for optimizer algorithms.    
 Here is a repository where you can find a python implementation of a benchmark environment for optimizer algorithms. 
 Produce comparative measures between algorithms  in csv format with effective test function call count. It has a problem function call optimization, so more calls at the same point X count only for one call. Contains a standard library implementation of convex functions and difference of convex functions.  
-The hope is to have a useful, common tool for the scientific optimization community to experiment and share results.
+The hope is to have a useful, common tool for the scientific optimization community to conduct experiments and share their comparable results.
 
 ## problems + algorithms = experiments
 - A problem is a function f where f: R(n) -> R with n called dimension.  
@@ -130,7 +129,7 @@ Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM proble
 Instruction like 
 > counter.up('lb<0', cls='qp')  
 
-is used in order to count events in code, summerized in statistics at the end of experiment as a column, available in dataframe returned by call to algorMeter and in final csv.
+is used to count events in code, summerized in statistics at the end of experiment as a column, available in dataframe returned by call to algorMeter and in final csv.
 For the code above a column with count of counter.up calls and head 'qp.lb>0' is produced.  
 Also are automatically available columns '# f1', '# f2', '# gf1', '# gf1' with effective calls to f1, f2, gf1, gf2
 
@@ -186,8 +185,10 @@ Running visualizer.py produce or updates contour image in folder 'pics' for each
 # Acknowledgment
 Algormeter was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
 # Contributing
-You can download or fork the repository freely. If you see a mistake you can send me a mail at pietrodalessandro@gmail.com 
-If you open up a ticket, please make sure it describes the problem or feature request fully.
+You can download or fork the repository freely.  
+https://github.com/xedla/algormeter  
+If you see a mistake you can send me a mail at pietrodalessandro@gmail.com 
+If you open up a ticket, please make sure it describes the problem or feature request fully.  
 Any suggestion are welcome.
 # WARNING
 AlgorMeter is still in the early stages of development. 
@@ -198,6 +199,12 @@ AlgorMeter is still in the early stages of development.
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY. 
+
+# Installation
+Algormeter is available as pypi pip package.
+```python
+    pip3 install algormeter
+```
 
 # Dependencies
 Python version at least
