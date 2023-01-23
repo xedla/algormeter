@@ -54,7 +54,6 @@ class Kernel:
     def initCache(self,dim,cachesize = CACHESIZE):
         self.__cache = np.zeros((3*dim+3)*cachesize,dtype=float) # x,gf1,gf2,f1,f2,flags
         self.__cache = self.__cache.reshape(cachesize,-1)
-        self.ci = 0 # cache index, prossima row da utilizzare
         self.dim = dim
         self.cachesize = cachesize
         self.XC = self.__cache[:,0:self.dim]
@@ -70,33 +69,44 @@ class Kernel:
 
     def clearCache(self):
         self.__cache = np.zeros((3*self.dim+3)*self.cachesize,dtype=float) # x,gf1,gf2,f1,f2,flags
+        self.norms = -1*np.ones(Kernel.CACHESIZE) # norms as cache index
+        self.lru = np.zeros(Kernel.CACHESIZE,dtype=int) # last recent used
+        self.ccc = 0
 
     def _cacheCall(self, x, func, storage, mask, label):
-        x = np.array(x)
         i, flags = self.XFinder(x)
-        # print('x:',x,'idx:',i,'flags:',flags,'label:', label)
-
-        if flags and (flags& mask): # found 
-                # counter.up(label, cls='cache')
+        self.ccc += 1
+        
+        if flags and (flags & mask): # found 
+                self.lru[i] = self.ccc 
                 return storage[i]
 
-        counter.up(label) # not in cache 
+        counter.up(label) # not in cache, count it
         if flags: # but x is present in cache
+            self.lru[i] = self.ccc 
             newMask = int(self.FLAGS[i]) | mask
         else: # x is not present in cache
             newMask = mask
-            i = self.ci
-            self.ci = (self.ci +1) % self.cachesize
+            i = np.argmin(self.lru)
+            self.XC[i] = x 
+            self.norms[i] = np.linalg.norm(x)
 
-        self.XC[i] = x 
         storage[i] = func(x)
         self.FLAGS[i] =  newMask
+        self.lru[i] = self.ccc 
         return storage[i]
 
     def XFinder(self,x):
-        idx = np.where(np.all(self.XC==x,axis=1))[0]
-        r = int(idx[0]) if idx.size > 0 else None 
-        flags = int(self.FLAGS[r]) if r is not None else None 
+        r , flags = None, None
+        
+        nx = np.linalg.norm(x)
+   
+        for i in np.where(self.norms==nx)[0]:
+            if np.all(self.XC[i]==x):
+                r = i
+                flags = int(self.FLAGS[r]) 
+                break
+            
         return r, flags # flags is None if x not exist in cache
 
     def f (self, x : np.ndarray) -> np.ndarray :
@@ -107,6 +117,7 @@ class Kernel:
         return self._f1(x) - self._f2(x)
     def _gf (self, x : np.ndarray) -> np.ndarray :
         return self._gf1(x) - self._gf2(x)
+        
     def f1 (self, x : np.ndarray ) -> np.ndarray :
         return self._cacheCall(x,self._f1,self.F1,self.F1Bit, 'f1')
     def gf1 (self, x : np.ndarray) -> np.ndarray :
@@ -183,7 +194,6 @@ class Kernel:
 
     def loop(self):
         self.startTime = tm.default_timer()
-        counter.reset()
         if self.isRandomRun:
             self.randomStartPoint()
         self.kXMin = 0

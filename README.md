@@ -1,7 +1,8 @@
-# AlgorMeter: Tool for developing, testing and measuring optimizers algorithms
-Here is a repository where you can find a python implementation of a benchmark environment for optimizer algorithms. 
-Produce comparative measures between algorithms  in csv format with effective test function call count. It has a problem function call optimization, so more calls at the same point X count only for one call. Contains a standard library implementation of convex functions and difference of convex functions.  
-The hope is to have a useful, common tool for the scientific optimization community to conduct experiments and share their comparable results.
+# AlgorMeter: Tool for developing, testing, measuring and exchange optimizers algorithms
+AlgorMeter is a python implementation of an  environment for develop, test, measure, report and  compare optimization algorithms. 
+Having a common platform that simplifies developing, testing and exchange of optimization algorithms allows for better collaboration and sharing of resources among researchers in the field. This can lead to more efficient development and testing of new algorithms, as well as faster progress in the field overall.
+Produce comparative measures between algorithms  in csv format with effective test function call count. 
+It has a function call optimizer, so multiple calls at the same point X only count towards one call without the need to store intermediate results in variables simplifying coding algorithms.AlgorMeter contains a standard library of 10 DC problems and 7 convex problems on which to test algorithms. More problem collections can be easily added.
 
 ## problems + algorithms = experiments
 - A problem is a function f where f: R(n) -> R with n called dimension.  

@@ -1,17 +1,19 @@
+
 from algormeter.libs import *
 
 def test_cache():
     p = Parab(2)
-    p.f1([1,1])
+    x = np.ones(2)
+    p.f1(x)
     assert counter.get('f1') == 1
-    p.f1([1,1])
+    p.f1(x)
     assert counter.get('f1') == 1
     assert counter.get('f2') == None 
-    p.f([1,1])
+    p.f(x)
     assert counter.get('f1') == 1
     assert counter.get('f2') == 1 
     assert counter.get('gf2') == None 
-    p.gf([1,1])
+    p.gf(x)
     assert counter.get('f1') == 1
     assert counter.get('f2') == 1 
     assert counter.get('gf2') == 1 
@@ -22,7 +24,18 @@ def test_cacheSize():
         x = np.zeros(2)+i
         p.f(x)
     assert counter.get('f1') == Kernel.CACHESIZE 
-    p.f(x)
+    p.f(x) # type: ignore
+    assert counter.get('f1') == Kernel.CACHESIZE 
+
+def test_cache_life(): 
+    p = Parab(2)
+    y = -np.ones(2)
+    for i in range(Kernel.CACHESIZE-1):
+        p.f(y)
+        x = np.zeros(2)+i
+        p.f(x)
+    assert counter.get('f1') == Kernel.CACHESIZE 
+    p.f(y)
     assert counter.get('f1') == Kernel.CACHESIZE 
 
 
