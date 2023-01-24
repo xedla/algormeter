@@ -1,14 +1,15 @@
 # AlgorMeter: Tool for developing, testing, measuring and exchange optimizers algorithms
 AlgorMeter is a python implementation of an  environment for develop, test, measure, report and  compare optimization algorithms. 
 Having a common platform that simplifies developing, testing and exchange of optimization algorithms allows for better collaboration and sharing of resources among researchers in the field. This can lead to more efficient development and testing of new algorithms, as well as faster progress in the field overall.
-Produce comparative measures between algorithms  in csv format with effective test function call count. 
-It has a function call optimizer, so multiple calls at the same point X only count towards one call without the need to store intermediate results in variables simplifying coding algorithms.AlgorMeter contains a standard library of 10 DC problems and 7 convex problems on which to test algorithms. More problem collections can be easily added.
+AlgorMeter produces comparative measures among algorithms  in csv format with effective test function call count.  
+It embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  
+AlgorMeter contains a standard library of 10 DC problems and 7 convex problems for testing algorithms. More problem collections can be easily added.
 
 ## problems + algorithms = experiments
 - A problem is a function f where f: R(n) -> R with n called dimension.  
 - f = f1() - f2() difference of convex function where f1, f2: R(n) -> R. 
 - 'problems' is a list of problem
-- 'algorithm' is a code that try to find problem's minimum
+- 'algorithm' is a code that try to find problem local minima
 - 'experiment' is an algorMeter run with a list of problems and a list of algorithms that produce a result report
 
 ## How to use...
@@ -113,7 +114,7 @@ can be overriden like in
 ```
 
 ## Problems function call optimization
-AlgorMeter uses a problems function call optimization system so more calls at the same point X count only for one call. So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.
+AlgorMeter embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.
 ## Problems ready to use
 Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM problems list are available.    
  **probList_DCJBKM** contains ten frequently used unconstrained DC optimization problems, where objective functions are presented as DC (Difference of Convex) functions:
