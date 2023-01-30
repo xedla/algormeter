@@ -4,23 +4,23 @@ from algormeter import *
 from numpy.linalg import norm
 from math import sqrt, log
 
-TunePar.TMAX = 3. # type: ignore
-TunePar.TMIN = .05 # type: ignore
-TunePar.EPS = .01 # type: ignore
+Param.TMAX = 3. # type: ignore
+Param.TMIN = .05 # type: ignore
+Param.EPS = .01 # type: ignore
 tpar = [ # [name, [values list]]
-    ('TunePar.TMAX', [i for i in np.arange(1.,10.,1.)]),
-    ('TunePar.TMIN', [i for i in np.arange(.05,1.,.05)]),
+    ('Param.TMAX', [i for i in np.arange(1.,10.,1.)]),
+    ('Param.TMIN', [i for i in np.arange(.05,1.,.05)]),
 ]
 
 # Nonsmooth Barzilai-Borwein (NSBB) algorithm
 def NSBB(p, **kwargs):
     def t():
         d = p.Xk - Xprev
-        t = norm(p.gfXk)*norm(d)**2/(TunePar.EPS + 2*(p.f(Xprev)- p.fXk + p.gfXk @ d)) # type: ignore
+        t = norm(p.gfXk)*norm(d)**2/(Param.EPS + 2*(p.f(Xprev)- p.fXk + p.gfXk @ d)) # type: ignore
         dbx.print('t:',t, 'Xprev:',Xprev, 'f(Xprev):',p.f(Xprev) )
         m = 1./sqrt(p.K+1)
-        t = max(t, TunePar.TMIN*m) # type: ignore
-        t = min(t, TunePar.TMAX*m) # type: ignore
+        t = max(t, Param.TMIN*m) # type: ignore
+        t = min(t, Param.TMAX*m) # type: ignore
         return t
 
     def halt():

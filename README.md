@@ -153,12 +153,12 @@ NB: If trace = True python exceptions are not handled and raised.
 
 ### tuneParameters
 Some time is necessary tune some parameter combinations.  Procede as follow (See example4.py):
-- Use numeric parameters with TunePar as domain name, like TunePar.alpha in your algo code.
+- Use numeric parameters with Param as domain name, like Param.alpha in your algo code.
 - Define a list of lists with possible values of tuning parameters as follows:
 ```python
 tpar = [ # [name, [values list]]
-    ('TunePar.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
-    # ('TunePar.beta', [1. + i for i in np.arange(.05,.9,.05)]),
+    ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
+    # ('Param.beta', [1. + i for i in np.arange(.05,.9,.05)]),
 ]
 ```
 - call algorMeter with csv = True and tuneParameters=<list of parameters values> like tuneParameters=tpar.

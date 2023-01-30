@@ -1,2 +1,2 @@
-from .algormeter import algorMeter, TunePar
+from .algormeter import algorMeter, Param
 from algormeter.libs import *

@@ -17,7 +17,7 @@ import datetime
 import os
 import __main__
 from algormeter.tools import counter, dbx
-class TunePar:
+class Param:
     ...
 
 
@@ -46,15 +46,15 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
             if not ls:
                 return
             for varName, l in ls:
-                if  'TunePar' not in varName:
-                    raise ValueError(f'{varName} invalid name. Must be TunePar.<someparam>')
+                if  'Param' not in varName:
+                    raise ValueError(f'{varName} invalid name. Must be Param.<someparam>')
                 if   not len(l):
                     raise ValueError(f'{varName}: empty value list {l}')
 
         def scanParams(list):
             def paramStatus():
                 vs = {}
-                for k,e  in vars(TunePar).items():
+                for k,e  in vars(Param).items():
                     if not k.startswith('__'):
                         vs[k] = e
                 return vs
@@ -102,7 +102,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                             p.isRandomRun = True
                         algorithm(p, **kwargs)
                         if tuneParameters:
-                            counter.log (str(varStat), 'TunePar')
+                            counter.log (str(varStat), 'Param')
                     except AssertionError as e:
                         raise e
                     except (ArithmeticError, Exception) as e:

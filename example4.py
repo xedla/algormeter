@@ -3,15 +3,15 @@
 from algormeter import *
 import algormeter.algorithms as alg
 
-TunePar.alpha = 1. # type: ignore
+Param.alpha = 1. # type: ignore
 
 def gradient(p, **kwargs):
     for k in p.loop():
-        p.Xkp1 = p.Xk - TunePar.alpha/(k+1) * p.gfXk / np.linalg.norm(p.gfXk) # type: ignore
+        p.Xkp1 = p.Xk - Param.alpha/(k+1) * p.gfXk / np.linalg.norm(p.gfXk) # type: ignore
 
 tpar = [ # [name, [values list]]
-    ('TunePar.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
-    # ('TunePar.beta', [1. + i for i in np.arange(.05,.9,.05)]),
+    ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
+    # ('Param.beta', [1. + i for i in np.arange(.05,.9,.05)]),
 ]
 
 problems = [
