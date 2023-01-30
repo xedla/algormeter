@@ -56,7 +56,7 @@ pv and df are pandas dataframe with run result. A .csv file with result is also 
 ## AlgorMeter interface
 
 ```python
-def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, 
+def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, timeout = 180
     runs = 1, trace = False, dbprint= False, csv = True, savedata = False,
      absTol =1.E-4, relTol = 1.E-5,  **kwargs):
 ```
@@ -64,6 +64,7 @@ def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500,
 - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_coax, probList_DCJBKM are available)*
 - tuneParameters = None: see tuneParameters section 
 - iterations = 500: max iterations number 
+- timeout = 180: time out in seconds
 - runs = 1: see random section 
 - trace = False: see trace section 
 - dbprint= False: see dbprint section 

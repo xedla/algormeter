@@ -21,14 +21,17 @@ class TunePar:
     ...
 
 
-def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[int]]], tuneParameters : Optional[list] = None, iterations : int = 500, 
-    runs : int = 1, trace : bool = False, dbprint : bool = False, csv : bool = True, savedata : bool = False,
-     absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
+def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[int]]],  iterations : int = 500, timeout : int = 180, 
+    tuneParameters : Optional[list] = None,
+    runs : int = 1, trace : bool = False, dbprint : bool = False, 
+    csv : bool = True, savedata : bool = False,
+    absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
     '''Benchmark environment for Optimizer algorithms
         - algorithms: algorithms list. *(algoList_simple is available )* 
         - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_coax, probList_DCJBKM are available)*
         - tuneParameters = None: see tuneParameters section 
         - iterations = 500: max iterations number 
+        - timeout = 180: time out in seconds
         - runs = 1: see random section 
         - trace = False: see trace section 
         - dbprint= False: see dbprint section 
@@ -129,7 +132,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
     for exp in problems:
         for alg in algorithms:
             dfl.append(algoRun(experiment=exp,algorithm=alg,tuneParameters = tuneParameters,
-                iterations=iterations, runs = runs, trace = trace, csv = csv, dbprint=dbprint,
+                iterations=iterations, timeout = timeout, runs = runs, trace = trace, csv = csv, dbprint=dbprint,
                 absTol = absTol, relTol = relTol, savedata = savedata ))
 
     if not dfl:

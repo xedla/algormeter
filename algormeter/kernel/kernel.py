@@ -35,11 +35,12 @@ class Kernel:
         self.optimumValue = 0.0
         self.XStart = np.ones(dimension)
 
-    def config (self, iterations : int =500, trace : bool = False, savedata : bool = False,
+    def config (self, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
                 csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) -> None :
         '''configure with default value'''
         self.trace = trace
         self.csv = csv
+        self.timeout = timeout
         self.maxiterations = iterations
         self.relTol = relTol 
         self.absTol = absTol 
@@ -196,13 +197,10 @@ class Kernel:
         self.startTime = tm.default_timer()
         if self.isRandomRun:
             self.randomStartPoint()
-        # self.kXMin = 0
-        # self.fXMin = math.inf 
-        # self.XMin = self.XStart
         self.Success = False
+        self.timeoutStatus = False
         self.XStar = self.XStart
         self.Xk = self.XStart
-        # self.Xkp1 = self.XStart
         self.fXkPrev = math.inf
         self.K = -1 # recalc inc K
         self.recalc(self.Xk)
@@ -210,14 +208,13 @@ class Kernel:
         while self.K < self.maxiterations-1:
             yield self.K
             self.recalc(self.Xkp1)
-            # if self.fXk < self.fXMin:
-            #     self.XMin = self.Xkp1
-            #     self.kXMin = self.K
-            #     self.fXMin = self.fXk
             if self.isHalt():
                 self.Success = True
                 break
-            # self.fXkPrev = self.fXk
+            if  tm.default_timer() - self.startTime > self.timeout:
+                self.timeoutStatus = True
+                break
+
         
         self.XStar = self.Xk
 
@@ -242,25 +239,24 @@ class Kernel:
                 np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
 
     def stats(self):
-        def success2Status():
+        def expStatus():
             if self.isSuccess():
                 return 'Success'
+            if self.timeoutStatus:
+                return 'Timeout'
             return 'Fail'
         counter.disable()
         stat = {"Problem" : str(self),
                 "Dim": self.dimension,
-                "Status":success2Status(),
+                "Status":expStatus(),
                 "Iterations": int(self.K),
                 "f(XStar)": f'{float(self.f(self.XStar)):.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
                 'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.0E}',
                 "Seconds" :f'{(tm.default_timer() - self.startTime):.2f}',
                 "Start point": self._pp(self.XStart),
-                # "Distance": round(np.linalg.norm(self.optimumPoint - self.XStar),3),
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
-                # "MinX": self._pp(self.XMin),
-                # "f(MinX)": self.fXMin,
             }
         stat.update(counter.report())
         counter.enable()
