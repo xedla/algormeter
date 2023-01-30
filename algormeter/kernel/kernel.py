@@ -189,16 +189,16 @@ class Kernel:
                 self.Y = self.data[:,-1] 
 
             self.X[k] = self.Xk
-            self.Y[k] = self.fXk
+            self.Y[k] = self._f(self.Xk)
         self.traceLine()
 
     def loop(self):
         self.startTime = tm.default_timer()
         if self.isRandomRun:
             self.randomStartPoint()
-        self.kXMin = 0
-        self.fXMin = math.inf 
-        self.XMin = self.XStart
+        # self.kXMin = 0
+        # self.fXMin = math.inf 
+        # self.XMin = self.XStart
         self.Success = False
         self.XStar = self.XStart
         self.Xk = self.XStart
@@ -210,14 +210,14 @@ class Kernel:
         while self.K < self.maxiterations-1:
             yield self.K
             self.recalc(self.Xkp1)
-            if self.fXk < self.fXMin:
-                self.XMin = self.Xkp1
-                self.kXMin = self.K
-                self.fXMin = self.fXk
+            # if self.fXk < self.fXMin:
+            #     self.XMin = self.Xkp1
+            #     self.kXMin = self.K
+            #     self.fXMin = self.fXk
             if self.isHalt():
                 self.Success = True
                 break
-            self.fXkPrev = self.fXk
+            # self.fXkPrev = self.fXk
         
         self.XStar = self.Xk
 
