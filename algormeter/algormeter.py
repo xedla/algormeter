@@ -101,8 +101,6 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                         if runs > 1:
                             p.isRandomRun = True
                         algorithm(p, **kwargs)
-                        if tuneParameters:
-                            counter.log (str(varStat), 'Param')
                     except AssertionError as e:
                         raise e
                     except (ArithmeticError, Exception) as e:
@@ -110,6 +108,9 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                         if (dbprint or trace) and excp :
                             raise e
                     finally:
+                        if tuneParameters:
+                            counter.log (str(varStat), 'Param')
+                            # print(str(varStat))
                         st = p.stats()
                         if excp: st['Status'] = 'Error'
                         stats.append(st)
@@ -117,7 +118,10 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
 
             usedtime = datetime.datetime.now() - ts  
             msg = ': ' + str(excp) if excp else ''
-            print('. Done. time:',usedtime, ' iterations:',iter, ' status:', st['Status'], msg)
+            if tuneParameters:
+                print('. Done. time:',usedtime)
+            else:
+                print('. Done. time:',usedtime, ' iterations:',iter, ' status:', st['Status'], msg)
 
         s = pd.DataFrame(stats)
         s.insert(2, 'Algorithm', algoDescr)
