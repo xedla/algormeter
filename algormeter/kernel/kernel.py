@@ -12,45 +12,10 @@ import timeit  as tm
 from algormeter.tools import counter, dbx
 
 class Kernel:
+
+## cache 
     CACHESIZE = 128
     SAVEDATABUFFERSIZE = 1000
-
-    def __init__ (self, dimension : int =2) :
-        self.dimension = dimension 
-        self.initCache(dimension)
-        self.isRandomRun = False
-        self.__inizialize__(dimension)
-        self.randomSet() # default random run param
-        self.label = ''
-        self.Success = False
-        self.config() 
-        self.K = -1
-        self.Xk = self.XStart
-        self.clearCache()
-        counter.reset()
-        self.recalc(self.XStart)
-
-    def __inizialize__(self, dimension : int):
-        self.optimumPoint = np.zeros(dimension)
-        self.optimumValue = 0.0
-        self.XStart = np.ones(dimension)
-
-    def config (self, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
-                csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) -> None :
-        '''configure with default value'''
-        self.trace = trace
-        self.csv = csv
-        self.timeout = timeout
-        self.maxiterations = iterations
-        self.relTol = relTol 
-        self.absTol = absTol 
-        self.savedata = savedata
-        self.Xk = self.XStart
-
-        if self.savedata is True:
-            self.data = np.zeros([Kernel.SAVEDATABUFFERSIZE,self.dimension+1]) # +1 per fx
-            self.X = self.data[:,:-1] 
-            self.Y = self.data[:,-1] 
 
     def initCache(self,dim,cachesize = CACHESIZE):
         self.__cache = np.zeros((3*dim+3)*cachesize,dtype=float) # x,gf1,gf2,f1,f2,flags
@@ -110,6 +75,46 @@ class Kernel:
             
         return r, flags # flags is None if x not exist in cache
 
+## problem interface
+    def __init__ (self, dimension : int =2) :
+        self.dimension = dimension 
+        self.initCache(dimension)
+        self.isRandomRun = False
+        self.__inizialize__(dimension)
+        self.randomSet() # default random run param
+        self.label = ''
+        self.config() 
+        self.K = -1
+        self.Xk = self.XStart
+        self.clearCache()
+        counter.reset()
+        self.recalc(self.XStart)
+
+    def __inizialize__(self, dimension : int):
+        self.optimumPoint = np.zeros(dimension)
+        self.optimumValue = 0.0
+        self.XStart = np.ones(dimension)
+
+    def config (self, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
+                csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) -> None :
+        '''configure with default value'''
+        self.trace = trace
+        self.csv = csv
+        self.timeout = timeout
+        self.maxiterations = iterations
+        self.relTol = relTol 
+        self.absTol = absTol 
+        self.savedata = savedata
+        self.Xk = self.XStart
+
+        if self.savedata is True:
+            self.data = np.zeros([Kernel.SAVEDATABUFFERSIZE,self.dimension+1]) # +1 per fx
+            self.X = self.data[:,:-1] 
+            self.Y = self.data[:,-1] 
+    
+    def isMinimum(self, x : np.ndarray) -> bool:
+        return bool(np.allclose (x, self.optimumPoint,rtol=self.relTol,atol=self.absTol) )
+
     def f (self, x : np.ndarray) -> np.ndarray :
         return self.f1(x) - self.f2(x)
     def gf (self, x : np.ndarray) -> np.ndarray :
@@ -155,8 +160,8 @@ class Kernel:
     @property
     def gfXk(self):
         return self.gf1Xk - self.gf2Xk
-        
-    
+
+## loop
     def traceLine(self):
         if self.trace:
             CB = '\033[102m'
@@ -197,7 +202,7 @@ class Kernel:
         self.startTime = tm.default_timer()
         if self.isRandomRun:
             self.randomStartPoint()
-        self.Success = False
+        self.isStopCondition = False
         self.timeoutStatus = False
         self.XStar = self.XStart
         self.Xk = self.XStart
@@ -209,7 +214,7 @@ class Kernel:
             yield self.K
             self.recalc(self.Xkp1)
             if self.isHalt():
-                self.Success = True
+                self.isStopCondition = True
                 break
             if  tm.default_timer() - self.startTime > self.timeout:
                 self.timeoutStatus = True
@@ -230,11 +235,13 @@ class Kernel:
             print('\n\n')
 
     def isSuccess(self) -> bool:
-        '''return True if experiment success. Reassign it if needed'''
-        return self.Success and bool(np.isclose(self.f(self.XStar), self.optimumValue,atol=self.absTol, rtol= self.relTol)) 
+        '''return True if experiment success. Override it if needed'''
+        return self.isStopCondition and \
+                bool(np.isclose(self.f(self.XStar), self.optimumValue,atol=self.absTol, rtol= self.relTol)) 
+                # self.isMinimum(self.XStar)
 
     def isHalt(self) -> bool:
-        '''return True if experiment must stop. Reassign it if needed'''
+        '''return True if experiment must stop. Override it if needed'''
         return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  or \
                 np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
 
@@ -254,9 +261,9 @@ class Kernel:
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
                 'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.0E}',
                 "Seconds" :f'{(tm.default_timer() - self.startTime):.2f}',
-                "Start point": self._pp(self.XStart),
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
+                "Start point": self._pp(self.XStart),
             }
         stat.update(counter.report())
         counter.enable()
@@ -269,7 +276,7 @@ class Kernel:
         self.maxiterations = iterations
         self.trace = trace
         algorithm(self,**kargs)
-        return self.Success, self.Xk, self.fXk
+        return self.isStopCondition, self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
         if (len(startPoint) != self.dimension):

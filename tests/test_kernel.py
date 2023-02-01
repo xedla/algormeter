@@ -48,3 +48,11 @@ def test_explib():
     explib(probList_DCJBKM)
     explib(probList_coax)
     explib(probList_base)
+
+def test_isMinimum():
+    p = JB01(2)
+    assert p.isMinimum(np.array([1,1])) == True
+    assert p.isMinimum(np.array([1,-2])) == False
+    p = JB04(2)
+    assert p.isMinimum(np.array([1,-1])) == True
+    assert p.isMinimum(np.array([1,-2])) == False
