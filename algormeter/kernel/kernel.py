@@ -210,35 +210,37 @@ class Kernel:
         self.K = -1 # recalc inc K
         self.recalc(self.Xk)
         
-        while self.K < self.maxiterations-1:
-            yield self.K
+        try:
+            while self.K < self.maxiterations-1:
+                yield self.K
+                self.recalc(self.Xkp1)
+                if self.isHalt():
+                    self.isStopCondition = True
+                    break
+                if  tm.default_timer() - self.startTime > self.timeout:
+                    self.timeoutStatus = True
+                    break
+        finally:
             self.recalc(self.Xkp1)
             if self.isHalt():
                 self.isStopCondition = True
-                break
-            if  tm.default_timer() - self.startTime > self.timeout:
-                self.timeoutStatus = True
-                break
+            
+            self.XStar = self.Xk
 
-        
-        self.XStar = self.Xk
+            if self.savedata:
+                self.data.resize(self.K,self.dimension+1,refcheck=False)
+                label = '' if self.label == '' else self.label + ','
+                dir = './npy/'
+                if not os.path.isdir(dir):
+                    os.mkdir(dir)
+                np.save(f'{dir}{label}{repr(self)}',self.data)
 
-        if self.savedata:
-            self.data.resize(self.K,self.dimension+1,refcheck=False)
-            label = '' if self.label == '' else self.label + ','
-            dir = './npy/'
-            if not os.path.isdir(dir):
-                os.mkdir(dir)
-            np.save(f'{dir}{label}{repr(self)}',self.data)
-
-        if self.trace:
-            print('\n\n')
+            if self.trace:
+                print('\n\n')
 
     def isSuccess(self) -> bool:
         '''return True if experiment success. Override it if needed'''
-        return self.isStopCondition and \
-                bool(np.isclose(self.f(self.XStar), self.optimumValue,atol=self.absTol, rtol= self.relTol)) 
-                # self.isMinimum(self.XStar)
+        return self.isStopCondition and bool(abs(self._f(self.XStar) - self.optimumValue) < self.absTol)
 
     def isHalt(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
