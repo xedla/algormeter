@@ -22,5 +22,5 @@ def myAlgo(p, **kwargs):
 
 def test_minimize():
     p = MyProb(K)
-    status, x, y = p.minimize(myAlgo)
-    assert status == True and np.isclose(y,-1.), 'minimize failed'
+    found, x, y = p.minimize(myAlgo)
+    assert found == True and np.isclose(y,-1.), 'minimize failed'

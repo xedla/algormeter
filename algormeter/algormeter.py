@@ -7,7 +7,7 @@ Created on 9 May 2022
 
 '''
 __all__ = ['algorMeter']
-__version__ = '0.9.2'
+__version__ = '0.9.4'
 __author__ = "Pietro d'Alessandro"
 
 import pandas as pd
@@ -63,7 +63,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                 varName, ls = list[0]
                 for v in ls:
                     try:
-                        exec(f'{varName}=round({v},3)')
+                        exec(f'{varName}=round({v},5)')
                     except Exception as e: 
                         raise ValueError(f'parameter {varName}:',e)
                     yield from scanParams(list[1:])

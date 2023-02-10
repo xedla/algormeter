@@ -1,4 +1,5 @@
 # AlgorMeter: Tool for developing, testing, measuring and exchange optimizers algorithms
+
 AlgorMeter is a python implementation of an  environment for develop, test, measure, report and  compare optimization algorithms. 
 Having a common platform that simplifies developing, testing and exchange of optimization algorithms allows for better collaboration and sharing of resources among researchers in the field. This can lead to more efficient development and testing of new algorithms, as well as faster progress in the field overall.
 AlgorMeter produces comparative measures among algorithms  in csv format with effective test function call count.  
@@ -6,6 +7,7 @@ It embeds a specific feature devoted to optimize the number of function calls, s
 AlgorMeter contains a standard library of 10 DC problems and 7 convex problems for testing algorithms. More problem collections can be easily added.
 
 ## problems + algorithms = experiments
+
 - A problem is a function f where f: R(n) -> R with n called dimension.  
 - f = f1() - f2() difference of convex function where f1, f2: R(n) -> R. 
 - 'problems' is a list of problem
@@ -13,7 +15,9 @@ AlgorMeter contains a standard library of 10 DC problems and 7 convex problems f
 - 'experiment' is an algorMeter run with a list of problems and a list of algorithms that produce a result report
 
 ## How to use...
+
 ### Implement an algorithm...
+
 Copy and customize algorithm examples like the following *(there are many included example?.py)*
 
 ```python
@@ -60,6 +64,7 @@ def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, ti
     runs = 1, trace = False, dbprint= False, csv = True, savedata = False,
      absTol =1.E-4, relTol = 1.E-5,  **kwargs):
 ```
+
 - algorithms: algorithms list. *(algoList_simple is available )* 
 - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_coax, probList_DCJBKM are available)*
 - tuneParameters = None: see tuneParameters section 
@@ -75,48 +80,54 @@ def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, ti
 
 call to algorMeter returns two pandas dataframe p1, p2. p2 is a success and fail summary count.
 p1 is a detailed report with the following columns.
-- Problem	
-- Dim	
-- Algorithm	
-- Status	: Success, Fail or Error
-- Iterations	
-- f(XStar)	
-- f(BKXStar)	
-- Delta	: absolute difference between  f(XStar) and f(BKXStar)	
-- Seconds	
-- Start point	
-- XStar	: minimum
-- BKXStar : best known minum
+
+- Problem  
+- Dim
+- Algorithm  
+- Status: Success, Fail or Error
+- Iterations  
+- f(XStar  
+- f(BKXStar)  
+- Delta: absolute difference between  f(XStar) and f(BKXStar)  
+- Seconds  
+- Start point  
+- XStar: minimum
+- BKXStar: best known minum
 - \# f1	# f2 # gf1	# gf2: effective calls count
 - ... : other columns with count to counter.up utility (see below)
 
 
 ###  Stop and success condition
+
 ```python
     def isSuccess(self):
         '''return True if experiment success. Reassign it if needed'''
         return self.Success and bool(np.isclose(self.f(self.XStar), self.optimumValue,atol=self.absTol, rtol= self.relTol)) 
 
-    def isHalt(self):
+    def stop(self):
         '''return True if experiment must stop. Reassign it if needed'''
         return np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  or \
                 np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) 
 ```
 
 can be overriden like in
+
 ```python
     def stop():
         return bool(np.isclose(p.f(p.Xk), p.optimumValue,atol=p.absTol, rtol= p.relTol)) or \
                 bool(np.allclose (p.Xk, p.optimumPoint,rtol=p.relTol,atol=p.absTol))
     
-    p.isHalt = stop
+    p.stop = stop
     p.isSuccess = stop
 
 ```
 
 ## Problems function call optimization
-AlgorMeter embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.
+
+AlgorMeter embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.  
+
 ## Problems ready to use
+
 Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM problems list are available.    
  **probList_DCJBKM** contains ten frequently used unconstrained DC optimization problems, where objective functions are presented as DC (Difference of Convex) functions:
 𝑓(𝑥)=𝑓1(𝑥)−𝑓2(𝑥).
@@ -129,6 +140,7 @@ Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM proble
  See 'ProblemsLib.pdf'
 
 ### Counters
+
 Instruction like 
 > counter.up('lb<0', cls='qp')  
 
@@ -137,12 +149,14 @@ For the code above a column with count of counter.up calls and head 'qp.lb>0' is
 Also are automatically available columns '# f1', '# f2', '# gf1', '# gf1' with effective calls to f1, f2, gf1, gf2
 
 ### dbprint = True
+
 Instruction dbx.print produce print out only if algorMeter call ha option dbptint == True
 > dbx.print('t:',t, 'Xprev:',Xprev, 'f(Xprev):',p.f(Xprev) ).  
 
 NB: If dbprint = True python exceptions are not handled and raised.
 
 ### Trace == True
+
 If Default.TRACE = True a line with function values are shown as follows in the console for each iteration for algorithms analysis purpose.
 >  Acad-2 k:0,f:-0.420,x:[ 0.7 -1.3],gf:[ 1.4 -0.6],f1:2.670,gf1:[ 3.1 -2.9],f2:3.090,gf2:[ 1.7 -2.3]   
  > Acad-2 k:1,f:-1.816,x:[-1.0004 -0.5712],gf:[-8.3661e-04  8.5750e-01],f1:0.419,gf1:[-2.0013 -0.7137],f2:2.235,gf2:[-2.0004 -1.5712]  
@@ -153,22 +167,28 @@ NB: If trace = True python exceptions are not handled and raised.
 
 ### tuneParameters
 Some time is necessary tune some parameter combinations.  Procede as follow (See example4.py):
+
 - Use numeric parameters with Param as domain name, like Param.alpha in your algo code.
 - Define a list of lists with possible values of tuning parameters as follows:
+
 ```python
 tpar = [ # [name, [values list]]
     ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
     # ('Param.beta', [1. + i for i in np.arange(.05,.9,.05)]),
 ]
 ```
+
 - call algorMeter with csv = True and tuneParameters=<list of parameters values> like tuneParameters=tpar.
 - open csv file produced and analyze the performance of parameters combinations by looking column '# tunePar'. Useful is a pivot table on such column.
 
 ## Random start point 
+
 If algorMeter parameter run is set with a number greater than 1, each algorithm is repeated on the same problem with random start point in range -1 to 1 for all dimensions.
 By the method setRandom(center, size) random X can be set in [center-size, center+size] interval.  
 See example5.py
+
 ## Record data 
+
 with option data == True store in 'npy' folder one file in numpy format, for each experiment with X and Y=f(X) for all iterations.
 It is a numpy array with:
 > X = data[:,:-1]  
@@ -176,18 +196,26 @@ Y = data[:,-1]
 
 File name is like 'gradient,JB05-50.npy'.  
 These files are read by viewer.py data visualizer.
+
 ## Minimize
+
 In case you need to find the minimum of a problem/function by applying an algorithm developed with algormeter, the minimize method is available. (See example6.py):
+
 ```python
     p = MyProb(K) 
-    status, x, y = p.minimize(myAlgo)
+    found, x, y = p.minimize(myAlgo)
 ```
+
 ## Visualizer.py
+
 Running visualizer.py produce or updates contour image in folder 'pics' for each experiment with dimension = 2 with data in folder 'npy'.
 
 # Acknowledgment
+
 Algormeter was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
+
 # Contributing
+
 You can download or fork the repository freely.  
 https://github.com/xedla/algormeter  
 If you see a mistake you can send me a mail at pietrodalessandro@gmail.com 

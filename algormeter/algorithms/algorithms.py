@@ -61,12 +61,12 @@ def gradientV1(p, altFunc, evalEveryNumStep, **kwargs):
     if not callable(altFunc): 
         raise ValueError('altFunc is not callable')
 
-    def isHalt():
+    def stop():
         if p.K % evalEveryNumStep == 0:
             return altFunc(p.Xkp1) <  altFunc(p.Xk) - .1 * np.linalg.norm(p.gf1Xk - p.gf2Xk)**2
         return False
 
-    p.isHalt = isHalt # sostituisce isHalt con il nuovo criterio
+    p.stop = stop # sostituisce stop con il nuovo criterio
 
     for k in p.loop():
         p.Xkp1 = p.Xk - 1/(k+1) * p.gfXk / np.linalg.norm(p.gfXk) 

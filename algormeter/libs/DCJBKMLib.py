@@ -108,11 +108,6 @@ class JB04 (Kernel):
         self.optimumPoint = np.ones(dimension)
         self.optimumValue = 0.0
 
-    def isMinimum(self, x : np.ndarray) -> bool:
-        ''' Sono punti di ottimo tutti i punti (x1, ..., xn) dove x(i) = y,-y
-        '''
-        return np.allclose(abs(x[1]*np.ones(self.dimension)),abs(x),rtol=self.relTol,atol=self.absTol)
-
     def _f1(self, x):
         return self.dimension * np.max(np.abs(x))
     

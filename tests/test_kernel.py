@@ -18,6 +18,12 @@ def test_cache():
     assert counter.get('f2') == 1 
     assert counter.get('gf2') == 1 
 
+def test_skipcache():
+    p = Parab(2)
+    x = np.ones(2)
+    p._f1(x)
+    assert counter.get('f1') is None 
+
 def test_cacheSize():
     p = Parab(2)
     for i in range(Kernel.CACHESIZE):

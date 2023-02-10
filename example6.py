@@ -24,7 +24,7 @@ def myAlgo(p, **kwargs):
 for H in [3,5]:
     for K in [1,2,4]:
         p = MyProb() 
-        status, x, y = p.minimize(myAlgo)
+        found, x, y = p.minimize(myAlgo)
 
-        print(f'With K:{K}, H:{H} Status:{status}, y is {y} at {x}')
+        print(f'With K:{K}, H:{H} found:{found}, y is {y} at {x}')
 

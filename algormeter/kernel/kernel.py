@@ -86,13 +86,15 @@ class Kernel:
         self.config() 
         self.K = -1
         self.Xk = self.XStart
+        self.Xprev = self.Xk
+        self.fXkPrev = math.inf
         self.clearCache()
         counter.reset()
         self.recalc(self.XStart)
 
     def __inizialize__(self, dimension : int):
         self.optimumPoint = np.zeros(dimension)
-        self.optimumValue = 0.0
+        self.optimumValue = math.inf
         self.XStart = np.ones(dimension)
 
     def config (self, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
@@ -113,7 +115,7 @@ class Kernel:
             self.Y = self.data[:,-1] 
     
     def isMinimum(self, x : np.ndarray) -> bool:
-        return bool(np.allclose (x, self.optimumPoint,rtol=self.relTol,atol=self.absTol) )
+        return bool(abs(self._f(x) - self.optimumValue) < self.absTol)
 
     def f (self, x : np.ndarray) -> np.ndarray :
         return self.f1(x) - self.f2(x)
@@ -162,31 +164,35 @@ class Kernel:
         return self.gf1Xk - self.gf2Xk
 
 ## loop
+        
     def traceLine(self):
-        if self.trace:
-            CB = '\033[102m'
-            CE = '\033[0m'
-            if self.K == 0: print()
-            print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
+        if not self.trace:
+            return 
 
-      
-    def nullStepIsStop(self):
-        '''Declare Null Step. Do I stop for maxiteration?'''
-        self.recalc(self.Xk)
-        if self.K >= self.maxiterations-1:
-            return True
-        return False
+        fXk = self._f(self.Xk)
+        if self.fXkPrev > fXk:
+            CB = '\033[102m'
+        else:
+            CB = '\033[103m'
+        CE = '\033[0m'
+        
+        if self.K == 0: print()
+        print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
 
     def recalc(self,x):
         '''Recalc at step k
         '''
-        self.K +=1 # start from -1
+        if not (self.Xk == self.Xprev).all:
+            self.fXkPrev = self.f(self.Xk)                
+            if self.fXkPrev > self.f(self.Xk):
+                self.fXkPrev = self.f(self.Xk)                
         self.Xk = x
-        
         self.Xkp1 = x
-        k = self.K
+
+        self.traceLine()
 
         if self.savedata:
+            k = self.K
             # resize data se necessario
             r,_ = self.data.shape
             if k == r:
@@ -196,34 +202,33 @@ class Kernel:
 
             self.X[k] = self.Xk
             self.Y[k] = self._f(self.Xk)
-        self.traceLine()
 
     def loop(self):
         self.startTime = tm.default_timer()
         if self.isRandomRun:
             self.randomStartPoint()
-        self.isStopCondition = False
-        self.timeoutStatus = False
+        self.isFound = False
+        self.isTimeout = False
         self.XStar = self.XStart
         self.Xk = self.XStart
-        self.fXkPrev = math.inf
-        self.K = -1 # recalc inc K
+        self.K = 0
         self.recalc(self.Xk)
         
         try:
-            while self.K < self.maxiterations-1:
+            for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
-                if self.isHalt():
-                    self.isStopCondition = True
+                if self.stop():
+                    self.isFound = True
                     break
                 if  tm.default_timer() - self.startTime > self.timeout:
-                    self.timeoutStatus = True
+                    self.isTimeout = True
                     break
+                self.fXkPrev = self.f(self.Xk) 
         finally:
             self.recalc(self.Xkp1)
-            if self.isHalt():
-                self.isStopCondition = True
+            if  self.K <= self.maxiterations or self.stop():
+                self.isFound = True
             
             self.XStar = self.Xk
 
@@ -238,20 +243,21 @@ class Kernel:
             if self.trace:
                 print('\n\n')
 
+    def stop(self) -> bool:
+        '''return True if experiment must stop. Override it if needed'''
+        if (self.Xk == self.Xprev).all:
+            return False
+        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol) or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+
     def isSuccess(self) -> bool:
         '''return True if experiment success. Override it if needed'''
-        return self.isStopCondition and bool(abs(self._f(self.XStar) - self.optimumValue) < self.absTol)
-
-    def isHalt(self) -> bool:
-        '''return True if experiment must stop. Override it if needed'''
-        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  or \
-                np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+        return  self.isMinimum(self.XStar)
 
     def stats(self):
         def expStatus():
             if self.isSuccess():
                 return 'Success'
-            if self.timeoutStatus:
+            if self.isTimeout:
                 return 'Timeout'
             return 'Fail'
         counter.disable()
@@ -278,7 +284,7 @@ class Kernel:
         self.maxiterations = iterations
         self.trace = trace
         algorithm(self,**kargs)
-        return self.isStopCondition, self.Xk, self.fXk
+        return self.isFound, self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
         if (len(startPoint) != self.dimension):

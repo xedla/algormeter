@@ -26,7 +26,7 @@ def NSBB(p, **kwargs):
     def halt():
         return np.isclose(p.fXk,p.optimumValue,atol=1.E-6) 
 
-    p.isHalt = halt
+    p.stop = halt
     Xprev = p.XStart + .1
     
     for k in p.loop():
