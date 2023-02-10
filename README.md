@@ -100,14 +100,17 @@ p1 is a detailed report with the following columns.
 ###  Stop and success condition
 
 ```python
-    def isSuccess(self):
-        '''return True if experiment success. Reassign it if needed'''
-        return self.Success and bool(np.isclose(self.f(self.XStar), self.optimumValue,atol=self.absTol, rtol= self.relTol)) 
 
-    def stop(self):
-        '''return True if experiment must stop. Reassign it if needed'''
-        return np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  or \
-                np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) 
+    def stop(self) -> bool:
+        '''return True if experiment must stop. Override it if needed'''
+        if (self.Xk == self.Xprev).all:
+            return False
+        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol) or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+
+    def isSuccess(self) -> bool:
+        '''return True if experiment success. Override it if needed'''
+        return  self.isMinimum(self.XStar)
+ 
 ```
 
 can be overriden like in
