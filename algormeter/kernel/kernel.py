@@ -170,10 +170,13 @@ class Kernel:
             return 
 
         fXk = self._f(self.Xk)
-        if self.fXkPrev > fXk:
-            CB = '\033[102m'
+        if self.K == 0:
+            CB = '\033[47m'
+            self.fXkPrev = fXk
+        elif self.fXkPrev > fXk:
+            CB = '\033[102m' # green
         else:
-            CB = '\033[103m'
+            CB = '\033[103m' # yellow
         CE = '\033[0m'
         
         if self.K == 0: print()
@@ -224,7 +227,7 @@ class Kernel:
                 if  tm.default_timer() - self.startTime > self.timeout:
                     self.isTimeout = True
                     break
-                self.fXkPrev = self.f(self.Xk) 
+                self.fXkPrev = self._f(self.Xk) 
         finally:
             self.recalc(self.Xkp1)
             if  self.K <= self.maxiterations or self.stop():
