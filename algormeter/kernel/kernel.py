@@ -185,10 +185,12 @@ class Kernel:
     def recalc(self,x):
         '''Recalc at step k
         '''
-        if not (self.Xk == self.Xprev).all:
-            self.fXkPrev = self.f(self.Xk)                
-            if self.fXkPrev > self.f(self.Xk):
-                self.fXkPrev = self.f(self.Xk)                
+        if not (self.Xk == self.Xprev).all():
+            self.fXkPrev = self._f(self.Xk)                
+            self.Xprev = self.Xk
+            # if self.fXkPrev > self.f(self.Xk):
+            #     self.fXkPrev = self.f(self.Xk)                
+        
         self.Xk = x
         self.Xkp1 = x
 
@@ -221,7 +223,7 @@ class Kernel:
             for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
-                if self.stop():
+                if callable(self.stop) and self.stop():
                     self.isFound = True
                     break
                 if  tm.default_timer() - self.startTime > self.timeout:
@@ -248,9 +250,11 @@ class Kernel:
 
     def stop(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
-        if (self.Xk == self.Xprev).all:
+        if np.array_equal(self.Xk, self.Xprev):
             return False
-        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol) or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+        rc = bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
+                  or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+        return rc
 
     def isSuccess(self) -> bool:
         '''return True if experiment success. Override it if needed'''

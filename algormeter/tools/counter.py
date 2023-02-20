@@ -36,7 +36,7 @@ def get(elem : str, cls : str ='') -> Optional[str | None] :
     return None
 
 def report() -> dict[str,str]:
-    return {'# ' + k : v for k,v in sorted(_counter.items(), key = lambda t : t[0])}
+    return {k : v for k,v in sorted(_counter.items(), key = lambda t : t[0])}
 
 if __name__ == "__main__":
     up('e1')
@@ -49,4 +49,6 @@ if __name__ == "__main__":
     assert get('e2',cls='c1') == 2
     assert get('e2') == None
     assert get('e3') == None
+
+    log('delta','stop')
     print(report())

@@ -7,7 +7,6 @@ Created on 9 May 2022
 
 '''
 __all__ = ['algorMeter']
-__version__ = '0.9.4'
 __author__ = "Pietro d'Alessandro"
 
 import pandas as pd
@@ -110,7 +109,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                     finally:
                         if tuneParameters:
                             counter.log (str(varStat), 'Param')
-                            # print(str(varStat))
+                            print(problem.__name__,str(varStat),end='\r')
                         st = p.stats()
                         if excp: st['Status'] = 'Error'
                         stats.append(st)
@@ -119,7 +118,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
             usedtime = datetime.datetime.now() - ts  
             msg = ': ' + str(excp) if excp else ''
             if tuneParameters:
-                print('. Done. time:',usedtime)
+                print('\ntime:',usedtime)
             else:
                 print('. Done. time:',usedtime, ' iterations:',iter, ' status:', st['Status'], msg)
 

@@ -11,7 +11,7 @@ def gradient(p, **kwargs):
 
 tpar = [ # [name, [values list]]
     ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
-    # ('Param.beta', [1. + i for i in np.arange(.05,.9,.05)]),
+    # ('Param.beta', [1., 2., 3.]),
 ]
 
 problems = [

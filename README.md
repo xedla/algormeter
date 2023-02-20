@@ -93,19 +93,19 @@ p1 is a detailed report with the following columns.
 - Start point  
 - XStar: minimum
 - BKXStar: best known minum
-- \# f1	# f2 # gf1	# gf2: effective calls count
+- \f1	f2 gf1	gf2: effective calls count
 - ... : other columns with count to counter.up utility (see below)
 
 
 ###  Stop and success condition
 
 ```python
-
     def stop(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
-        if (self.Xk == self.Xprev).all:
+        if np.array_equal(self.Xk, self.Xprev):
             return False
-        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol) or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
+        return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
+                  or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
 
     def isSuccess(self) -> bool:
         '''return True if experiment success. Override it if needed'''
@@ -149,7 +149,7 @@ Instruction like
 
 is used to count events in code, summerized in statistics at the end of experiment as a column, available in dataframe returned by call to algorMeter and in final csv.
 For the code above a column with count of counter.up calls and head 'qp.lb>0' is produced.  
-Also are automatically available columns '# f1', '# f2', '# gf1', '# gf1' with effective calls to f1, f2, gf1, gf2
+Also are automatically available columns 'f1', 'f2', 'gf1', 'gf1' with effective calls to f1, f2, gf1, gf2
 
 ### dbprint = True
 
