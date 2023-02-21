@@ -88,6 +88,8 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
         for dim in dims:
             algoDescr = prettyAlgo()
             print(f'Algorithm:{algoDescr}, Problem:{problem.__name__}, Dimension:{dim} ... running', end= '')
+            if tuneParameters:
+                print()
             ts = datetime.datetime.now()
             excp = None
             for varStat in scanParams(tuneParameters):
@@ -99,17 +101,19 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                     try:
                         if runs > 1:
                             p.isRandomRun = True
+                        if tuneParameters:
+                            print(problem.__name__,str(varStat),end='\r')
                         algorithm(p, **kwargs)
                     except AssertionError as e:
                         raise e
                     except (ArithmeticError, Exception) as e:
                         excp = e
+                        counter.log (str(e), 'Error')
                         if (dbprint or trace) and excp :
                             raise e
                     finally:
                         if tuneParameters:
                             counter.log (str(varStat), 'Param')
-                            print(problem.__name__,str(varStat),end='\r')
                         st = p.stats()
                         if excp: st['Status'] = 'Error'
                         stats.append(st)

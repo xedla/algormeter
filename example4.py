@@ -1,9 +1,11 @@
 # tuneParams example
+import pandas as pd
 
 from algormeter import *
 import algormeter.algorithms as alg
 
 Param.alpha = 1. # type: ignore
+Param.beta = 1. # type: ignore
 
 def gradient(p, **kwargs):
     for k in p.loop():
@@ -32,17 +34,33 @@ problems = [
         ]
 
 algorithms = [
-                alg.polyak,
+                # alg.polyak,
                 # alg.loggradient,
                 # alg.gradient,
                 gradient,
         ]
 
-df, pv = algorMeter(algorithms = algorithms, problems = problems, iterations = 3000,
+dff, pv = algorMeter(algorithms = algorithms, problems = problems, iterations = 3000,
                     tuneParameters=tpar, 
                     #  trace=True, 
                      # dbprint = True 
                      )
 
-print('\n', df)
+print('\n', dff)
 print('\n', pv)
+
+
+
+df = dff[dff.Status == 'Success']
+# df = df[ df.Param.str.contains("alpha': 0.3") ]
+
+df = df.groupby(['Param','Status',]).agg({'Status':'count','f1':'sum'})
+df.rename(columns={'Status': 'count'}, inplace=True)
+df = df.sort_values(['count','f1'],ascending=[False, True])
+
+pd.options.display.max_rows = 2000
+pd.options.display.max_colwidth = 1000
+
+print(df)
+
+# or better to use spreadsheet pivot from csv
