@@ -274,7 +274,7 @@ class Kernel:
                 "Iterations": int(self.K),
                 "f(XStar)": f'{float(self.f(self.XStar)):.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
-                'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.0E}',
+                'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.2E}',
                 "Seconds" :f'{(tm.default_timer() - self.startTime):.2f}',
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
