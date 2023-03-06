@@ -21,12 +21,6 @@ class Parab (Kernel):
     
     def _gf1(self, x):
         return 2.*x
-    
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
 
 class DemMol (Kernel):
     '''
@@ -52,12 +46,6 @@ class DemMol (Kernel):
         else:
             return np.array([2.*x[0],2.*x[1] + 4.])
     
-    def _f2(self,x ) :
-        return 0
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
-
 class Mifflin (Kernel):
     '''
     _f1: Mifflin
@@ -81,12 +69,6 @@ class Mifflin (Kernel):
             return np.array([-1. + 40*x[0],40*x[1]])
         else:
             return np.array([-1.,0.])
-    
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
 
 class LQ (Kernel):
     '''
@@ -115,12 +97,6 @@ class LQ (Kernel):
             return np.array([-1. , -1.])
         else:
             return np.array([-1. + 2*x[0], -1. + 2*x[1]])
-    
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
 
 class MAXQ (Kernel):
     '''
@@ -145,13 +121,6 @@ class MAXQ (Kernel):
         v[i] = 2*x[i]
         return v
     
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
-
-
 class QL (Kernel):
     '''
     _f1: QL
@@ -184,13 +153,6 @@ class QL (Kernel):
                 return np.array([2*x[0]-40.,2*x[1]-10.])
             case  2:
                 return np.array([2*x[0]-10.,2*x[1]-20.])
-    
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
-
 class CB2 (Kernel):
     '''
     _f1: CB2
@@ -225,13 +187,6 @@ class CB2 (Kernel):
             case  2:
                 return np.array([-2*np.exp(-x[0]+x[1]),2*np.exp(-x[0]+x[1])])
     
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
-
-
 class CB3 (Kernel):
     '''
     _f1: CB3
@@ -263,13 +218,6 @@ class CB3 (Kernel):
             case  2:
                 return np.array([-2*np.exp(-x[0]+x[1]),2*np.exp(-x[0]+x[1])])
 
-    
-    def _f2(self,x) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.zeros(self.dimension)
-
 class CVX1 (Kernel):
     '''Convex 1
     '''
@@ -285,12 +233,6 @@ class CVX1 (Kernel):
     
     def _gf1(self, x):
         return np.array([sign(x[0]-1) + 200*(0 if 0 > abs(x[0])-x[1] else sign(x[0])), 200*(0 if 0 > abs(x[0])-x[1] else -1)])
-
-    def _f2(self,x ) :
-        return 0.
-
-    def _gf2(self, x):
-        return np.array([0, 0])
 
 import algormeter.libs.data as data
 class MaxQuad (Kernel):
@@ -314,6 +256,7 @@ class MaxQuad (Kernel):
     
 probList_coax = [
     # (Parab,[2, 5, 20]),
+    (MaxQuad,[10]),
     (DemMol,[2]),
     (Mifflin,[2]),
     (LQ,[2]),
@@ -321,8 +264,4 @@ probList_coax = [
     (QL,[2]),
     (CB2,[2]),
     (CB3,[2]),
-    (MaxQuad,[10]),
 ]
-
-    
-

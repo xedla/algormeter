@@ -180,7 +180,10 @@ class Kernel:
         CE = '\033[0m'
         
         if self.K == 0: print()
-        print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
+        if self.isf1_only():
+            print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
+        else:
+            print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
 
     def recalc(self,x):
         '''Recalc at step k
@@ -328,6 +331,10 @@ class Kernel:
     def _pp(s):
         r = np.array2string(s,precision=4,threshold=4)
         return r
+    
+    def isf1_only(self): # problemi convessi, non DC, non hanno _f2 e _gf2
+        return 'Kernel' in self._f2.__qualname__
+        # return isinstance(self._f2,Kernel) #and isinstance(self._gf2,Kernel)
 
 
 # def sign(x):
