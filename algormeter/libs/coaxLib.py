@@ -240,8 +240,10 @@ class MaxQuad (Kernel):
         if dimension != 10:
             raise ValueError(f'Dimension {dimension} not supported ')
         self.XStart = np.ones(dimension)
-        self.optimumPoint = np.array([-0.1263, -0.0346, -0.0067,  0.0264,  0.0673, -0.2786, 0.0744,  0.1387, 0.0839,  0.0385])
-        self.optimumValue = -0.8408994234967448
+        # self.optimumPoint = np.array([-0.1263, -0.0346, -0.0067,  0.0264,  0.0673, -0.2786, 0.0744,  0.1387, 0.0839,  0.0385]) # libro
+        # self.optimumValue =  -0.8408994234967448 # calcolato con valore libro
+        self.optimumPoint = np.array([-0.1261166, -0.0343653, -0.0067986,  0.0263768,  0.0671908, -0.278298, 0.0742674 , 0.1385148,  0.08394,    0.038513 ]) # trovati con alg
+        self.optimumValue = -0.8414073 # [-0.841408 valore calcolato] 
 
     def _f11(self,x):
         r, c, s = data.mqA.shape
