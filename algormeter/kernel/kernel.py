@@ -83,6 +83,7 @@ class Kernel:
         self.__inizialize__(dimension)
         self.randomSet() # default random run param
         self.label = ''
+        self.isf1_only = 'Kernel' in self._f2.__qualname__ and 'Kernel' in self._gf2.__qualname__
         self.config() 
         self.K = -1
         self.Xk = self.XStart
@@ -180,7 +181,7 @@ class Kernel:
         CE = '\033[0m'
         
         if self.K == 0: print()
-        if self.isf1_only():
+        if self.isf1_only:
             print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
         else:
             print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
@@ -332,11 +333,6 @@ class Kernel:
         r = np.array2string(s,precision=4,threshold=4)
         return r
     
-    def isf1_only(self): # problemi convessi, non DC, non hanno _f2 e _gf2
-        return 'Kernel' in self._f2.__qualname__
-        # return isinstance(self._f2,Kernel) #and isinstance(self._gf2,Kernel)
-
-
 # def sign(x):
 #     # return np.sign(x)
 #     if type(x) == np.ndarray:
