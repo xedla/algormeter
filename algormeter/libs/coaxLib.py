@@ -292,6 +292,26 @@ class CVX1 (Kernel):
     def _gf2(self, x):
         return np.array([0, 0])
 
+import algormeter.libs.data as data
+class MaxQuad (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 10:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.XStart = np.ones(dimension)
+        self.optimumPoint = np.array([-0.1263, -0.0346, -0.0067,  0.0264,  0.0673, -0.2786, 0.0744,  0.1387, 0.0839,  0.0385])
+        self.optimumValue = -0.8408994234967448
+
+    def _f11(self,x):
+        r, c, s = data.mqA.shape
+        return [x @ data.mqA[:,:,_] @ x - data.mqB[:,_] @ x for _ in range(s)]
+        
+    def _f1(self, x):
+        return np.max(self._f11(x))
+    
+    def _gf1(self, x):
+        i = np.argmax(self._f11(x))
+        return 2*data.mqA[:,:,i] @ x - data.mqB[:,i]
+    
 probList_coax = [
     # (Parab,[2, 5, 20]),
     (DemMol,[2]),
@@ -301,6 +321,7 @@ probList_coax = [
     (QL,[2]),
     (CB2,[2]),
     (CB3,[2]),
+    (MaxQuad,[10]),
 ]
 
     
