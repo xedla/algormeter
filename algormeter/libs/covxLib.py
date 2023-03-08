@@ -256,7 +256,7 @@ class MaxQuad (Kernel):
         i = np.argmax(self._f11(x))
         return 2*data.mqA[:,:,i] @ x - data.mqB[:,i]
     
-probList_coax = [
+probList_covx = [
     # (Parab,[2, 5, 20]),
     (MaxQuad,[10]),
     (DemMal,[2]),

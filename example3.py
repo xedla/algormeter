@@ -33,7 +33,7 @@ def NSBB(p, **kwargs):
         p.Xkp1 = p.Xk - t() * p.gfXk / norm(p.gfXk) 
         Xprev = p.Xk
 
-df, pv = algorMeter(algorithms = [NSBB], problems = probList_coax, iterations = 2000,
+df, pv = algorMeter(algorithms = [NSBB], problems = probList_covx, iterations = 2000,
 # df, pv = algorMeter(algorithms = [NSBB], problems = [(MAXQ,[20])], iterations = 100, absTol=1E-4
                     # tuneParameters=tpar, 
                     # trace=True,         

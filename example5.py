@@ -14,7 +14,7 @@ def polyak(p, **kwargs):
             p.Xkp1 = p.Xk
 
 
-df, pv = algorMeter(algorithms = [polyak], problems = probList_coax, runs=50, iterations = 50, absTol=1E-2
+df, pv = algorMeter(algorithms = [polyak], problems = probList_covx, runs=50, iterations = 50, absTol=1E-2
                     #  trace=True, 
                      # dbprint = True 
                      )

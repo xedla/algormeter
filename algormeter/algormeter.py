@@ -27,7 +27,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
     absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
     '''Benchmark environment for Optimizer algorithms
         - algorithms: algorithms list. *(algoList_simple is available )* 
-        - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_coax, probList_DCJBKM are available)*
+        - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_covx, probList_DCJBKM are available)*
         - tuneParameters = None: see tuneParameters section 
         - iterations = 500: max iterations number 
         - timeout = 180: time out in seconds

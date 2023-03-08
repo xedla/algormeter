@@ -49,7 +49,7 @@ to determine the p.Xkp1 for the next iteration.
 ...and run it:
 
 ```python
-df, pv = algorMeter(algorithms = [gradient], problems = probList_coax, iterations = 500, absTol=1E-2)
+df, pv = algorMeter(algorithms = [gradient], problems = probList_covx, iterations = 500, absTol=1E-2)
 print('\n', pv,'\n', df)
 ```
 
@@ -66,7 +66,7 @@ def algorMeter(algorithms, problems, tuneParameters = None, iterations = 500, ti
 ```
 
 - algorithms: algorithms list. *(algoList_simple is available )* 
-- problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_coax, probList_DCJBKM are available)*
+- problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_covx, probList_DCJBKM are available)*
 - tuneParameters = None: see tuneParameters section 
 - iterations = 500: max iterations number 
 - timeout = 180: time out in seconds
@@ -131,12 +131,12 @@ AlgorMeter embeds a specific feature devoted to optimize the number of function 
 
 ## Problems ready to use
 
-Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM problems list are available.    
+Importing 'algormeter.libs' probList_base, probList_covx, probList_DCJBKM problems list are available.    
  **probList_DCJBKM** contains ten frequently used unconstrained DC optimization problems, where objective functions are presented as DC (Difference of Convex) functions:
 𝑓(𝑥)=𝑓1(𝑥)−𝑓2(𝑥).
  [Joki, Bagirov](https://link.springer.com/article/10.1007/s10898-016-0488-3)
 
- **probList_coax**  contains DemMal,Mifflin,LQ,MAXQ,QL,CB2,CB3 convex functions
+ **probList_covx**  contains DemMal,Mifflin,LQ,MAXQ,QL,CB2,CB3,MaxQuad convex functions
 
  **probList_base** contains ParAbs, Acad simple functions for algorithms early test.  
 

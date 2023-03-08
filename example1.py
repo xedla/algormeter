@@ -9,7 +9,7 @@ def gradient(p, **kwargs):
         p.Xkp1 = p.Xk - 1/(k+1) * p.gfXk / norm(p.gfXk) 
 
 
-df, pv = algorMeter(algorithms = [gradient], problems = probList_coax, iterations = 500, absTol=1E-2)
+df, pv = algorMeter(algorithms = [gradient], problems = probList_covx, iterations = 500, absTol=1E-2)
 
 print('\n', df)
 print('\n', pv)

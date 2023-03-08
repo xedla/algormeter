@@ -52,7 +52,7 @@ def test_explib():
                 p = el(d)
                 assert np.isclose(p.f(p.optimumPoint), p.optimumValue) 
     explib(probList_DCJBKM)
-    explib(probList_coax)
+    explib(probList_covx)
     explib(probList_base)
 
 def test_isMinimum():
