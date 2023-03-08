@@ -22,9 +22,9 @@ class Parab (Kernel):
     def _gf1(self, x):
         return 2.*x
 
-class DemMol (Kernel):
+class DemMal (Kernel):
     '''
-    _f1: Demyanov, Molozemov function
+    _f1: Demyanov, Malozemov function
     '''
 
     def __inizialize__(self, dimension):
@@ -259,7 +259,7 @@ class MaxQuad (Kernel):
 probList_coax = [
     # (Parab,[2, 5, 20]),
     (MaxQuad,[10]),
-    (DemMol,[2]),
+    (DemMal,[2]),
     (Mifflin,[2]),
     (LQ,[2]),
     (MAXQ,[20]),

@@ -136,7 +136,7 @@ Importing 'algormeter.libs' probList_base, probList_coax, probList_DCJBKM proble
 𝑓(𝑥)=𝑓1(𝑥)−𝑓2(𝑥).
  [Joki, Bagirov](https://link.springer.com/article/10.1007/s10898-016-0488-3)
 
- **probList_coax**  contains DemMol,Mifflin,LQ,MAXQ,QL,CB2,CB3 convex functions
+ **probList_coax**  contains DemMal,Mifflin,LQ,MAXQ,QL,CB2,CB3 convex functions
 
  **probList_base** contains ParAbs, Acad simple functions for algorithms early test.  
 
