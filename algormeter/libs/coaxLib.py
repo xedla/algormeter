@@ -12,9 +12,9 @@ class Parab (Kernel):
     _f2: zero
     '''
     def __inizialize__(self, dimension):
-        self.optimumPoint = np.zeros(self.dimension)
+        self.optimumPoint = np.zeros(dimension)
         self.optimumValue = 0.0
-        self.XStart = np.ones(self.dimension)*2 # (1,1, ...,1)
+        self.XStart = np.ones(dimension)*2 # (1,1, ...,1)
 
     def _f1(self, x):
         return np.sum(np.array(x)**2)
