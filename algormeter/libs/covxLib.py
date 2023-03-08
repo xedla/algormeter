@@ -1,11 +1,11 @@
-'''Coax Problems library
+'''Convex Problems library
 '''
 
 import numpy as np
 from algormeter.tools import counter, dbx
 from algormeter.kernel import *
 
-   
+ 
 class Parab (Kernel):
     '''
     _f1: Parabola with min in 0
@@ -22,9 +22,25 @@ class Parab (Kernel):
     def _gf1(self, x):
         return 2.*x
 
+class CVX1 (Kernel):
+    '''Convex 1
+    '''
+    def __inizialize__(self, dimension):
+        if dimension != 2:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.XStart = np.array([-1.,-2.])
+        self.optimumPoint = np.array([1.,1])
+        self.optimumValue = 0.0
+
+    def _f1(self, x) :
+        return abs(x[0]-1) + 200*np.max([0.,abs(x[0])-x[1]])
+    
+    def _gf1(self, x):
+        return np.array([sign(x[0]-1) + 200*(0 if 0 > abs(x[0])-x[1] else sign(x[0])), 200*(0 if 0 > abs(x[0])-x[1] else -1)])
+
 class DemMal (Kernel):
     '''
-    _f1: Demyanov, Malozemov function
+        Demyanov, Malozemov function
     '''
 
     def __inizialize__(self, dimension):
@@ -46,11 +62,7 @@ class DemMal (Kernel):
         else:
             return np.array([2.*x[0],2.*x[1] + 4.])
     
-class Mifflin (Kernel):
-    '''
-    _f1: Mifflin
-    _f2: zero
-    '''
+class Mifflin1 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -71,10 +83,6 @@ class Mifflin (Kernel):
             return np.array([-1.,0.])
 
 class LQ (Kernel):
-    '''
-    _f1: LQ
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -99,10 +107,6 @@ class LQ (Kernel):
             return np.array([-1. + 2*x[0], -1. + 2*x[1]])
 
 class MAXQ (Kernel):
-    '''
-    _f1: MAXQ
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         if dimension != 20:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -122,10 +126,6 @@ class MAXQ (Kernel):
         return v
     
 class QL (Kernel):
-    '''
-    _f1: QL
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -154,10 +154,6 @@ class QL (Kernel):
             case  2:
                 return np.array([2*x[0]-10.,2*x[1]-20.])
 class CB2 (Kernel):
-    '''
-    _f1: CB2
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -188,10 +184,6 @@ class CB2 (Kernel):
                 return np.array([-2*np.exp(-x[0]+x[1]),2*np.exp(-x[0]+x[1])])
     
 class CB3 (Kernel):
-    '''
-    _f1: CB3
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -218,22 +210,6 @@ class CB3 (Kernel):
             case  2:
                 return np.array([-2*np.exp(-x[0]+x[1]),2*np.exp(-x[0]+x[1])])
 
-class CVX1 (Kernel):
-    '''Convex 1
-    '''
-    def __inizialize__(self, dimension):
-        if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
-        self.XStart = np.array([-1.,-2.])
-        self.optimumPoint = np.array([1.,1])
-        self.optimumValue = 0.0
-
-    def _f1(self, x) :
-        return abs(x[0]-1) + 200*np.max([0.,abs(x[0])-x[1]])
-    
-    def _gf1(self, x):
-        return np.array([sign(x[0]-1) + 200*(0 if 0 > abs(x[0])-x[1] else sign(x[0])), 200*(0 if 0 > abs(x[0])-x[1] else -1)])
-
 import algormeter.libs.data as data
 class MaxQuad (Kernel):
     def __inizialize__(self, dimension):
@@ -256,14 +232,30 @@ class MaxQuad (Kernel):
         i = np.argmax(self._f11(x))
         return 2*data.mqA[:,:,i] @ x - data.mqB[:,i]
     
+      
+class Rosenbrock (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 2:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.optimumPoint = np.array([1,1])
+        self.optimumValue = 0.0
+        self.XStart = np.array([-1.2,1])
+
+    def _f1(self, x):
+        return 100*(x[1]-x[0]**2)**2 +(1-x[0])**2
+    
+    def _gf1(self, x):
+        return np.array([2*(200*x[0]**3 - 200*x[1]*x[0] + x[0] -1), 200*(x[1]-x[0]**2)])
+
 probList_covx = [
     # (Parab,[2, 5, 20]),
-    (MaxQuad,[10]),
     (DemMal,[2]),
-    (Mifflin,[2]),
+    (Mifflin1,[2]),
     (LQ,[2]),
-    (MAXQ,[20]),
     (QL,[2]),
+    (MAXQ,[20]),
+    (MaxQuad,[10]),
     (CB2,[2]),
     (CB3,[2]),
+    (Rosenbrock,[2]),
 ]
