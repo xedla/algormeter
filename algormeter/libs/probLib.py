@@ -2,7 +2,6 @@
 '''
 
 import numpy as np
-from algormeter.tools import counter, dbx
 from algormeter.kernel import *
 
  
@@ -81,6 +80,26 @@ class Mifflin1 (Kernel):
             return np.array([-1. + 40*x[0],40*x[1]])
         else:
             return np.array([-1.,0.])
+    
+class Mifflin2 (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 2:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.XStart = np.array([-1.,-1.])
+        self.optimumPoint = np.array([1.,0])
+        self.optimumValue = -1.
+
+    def _f11(self, x):
+        return x[0]**2 + x[1]**2 - 1
+
+    def _f1(self, x) :
+        f11 = self._f11(x)
+        return -x[0] + 2*f11 + 1.75*abs(f11)
+    
+    def _gf1(self, x):
+        sf11 = sign(self._f11(x))
+        return np.array([3.5*x[0]*sf11 + 4*x[0] -1,
+                         x[1]*(3.5*sf11 + 4)])
 
 class LQ (Kernel):
     def __inizialize__(self, dimension):
@@ -266,20 +285,66 @@ class Crescent (Kernel):
         return max(self._f11(x),self._f12(x))
     
     def _gf1(self, x):
-        if i := np.argmax([self._f11(x),self._f12(x)]) :
+        if np.argmax([self._f11(x),self._f12(x)]) :
             return np.array([-2*x[0],3-2*x[1]]) 
         return np.array([2*x[0],3-2*x[1]]) 
+    
+class Rosen (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 4:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.optimumPoint = np.array([0,1,2,-1])
+        self.optimumValue = -44.
+        self.XStart = np.zeros(4)
+
+    def _f11(self, x):
+        return x[0]**2 + x[1]**2 + 2*x[2]**2 + x[3]**2 - 5*x[0] - 5*x[1] - 21*x[2] + 7*x[3] 
+    def _f12(self, x):
+        return x[0]**2 + x[1]**2 + x[2]**2 + x[3]**2 + x[0] - x[1] + x[2] - x[3] -8 
+    def _f13(self, x):
+        return x[0]**2 + 2*x[1]**2 + x[2]**2 + 2*x[3]**2 - x[0] - x[3] -10 
+    def _f14(self, x):
+        return x[0]**2 + x[1]**2 + x[2]**2  + 2*x[0] - x[1] - x[3] -5 
+     
+    def _f1(self, x):
+        f11 = self._f11(x)
+        f12 = self._f12(x)
+        f13 = self._f13(x)
+        f14 = self._f14(x)
+        return max(f11, f11 + 10*f12, f11+10*f13, f11+10*f14)
+    
+    def _gf1(self, x):
+        f11 = self._f11(x)
+        f12 = self._f12(x)
+        f13 = self._f13(x)
+        f14 = self._f14(x)
+        match np.argmax([f11, f11 + 10*f12, f11+10*f13,f11+10*f14]):
+            case  0:
+                return np.array([2*x[0] -5, 2*x[1] -5, 4*x[2] -21, 2*x[3] +7 ])
+            case  1:
+                return np.array([2*x[0] -5, 2*x[1] -5, 4*x[2] -21, 2*x[3] +7 ]) + \
+                        10*np.array([2*x[0] +1, 2*x[1] -1, 2*x[2] +1, 2*x[3] -1 ])
+            case  2:
+                return np.array([2*x[0] -5, 2*x[1] -5, 4*x[2] -21, 2*x[3] +7 ]) + \
+                        10*np.array([2*x[0] -1, 4*x[1], 2*x[2], 4*x[3] -1 ])
+            case  3:
+                return np.array([2*x[0] -5, 2*x[1] -5, 4*x[2] -21, 2*x[3] +7 ]) + \
+                        10*np.array([2*x[0] +2, 2*x[1]-1, 2*x[2], -1 ])
+
+
 
 probList_covx = [
     # (Parab,[2, 5, 20]),
     (DemMal,[2]),
     (Mifflin1,[2]),
+    (Mifflin2,[2]),
     (LQ,[2]),
     (QL,[2]),
     (MAXQ,[20]),
     (MaxQuad,[10]),
     (CB2,[2]),
     (CB3,[2]),
+    (Rosen,[4]),
 ]
 
 probList_no_covx = [

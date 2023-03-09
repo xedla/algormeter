@@ -317,7 +317,10 @@ class Kernel:
         x = np.array(x)
         CB = '\033[102m'
         CE = '\033[0m'
-        print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
+        if self.isf1_only:
+            print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))}',CE)
+        else:
+            print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
 
     def __str__ (self):
         return self.__class__.__name__  

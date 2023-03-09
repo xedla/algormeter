@@ -1,5 +1,7 @@
 from algormeter import *
 from algormeter.libs import *
+from algormeter.tools import counter, dbx
+
 
 def test_e1():
     counter.reset()
