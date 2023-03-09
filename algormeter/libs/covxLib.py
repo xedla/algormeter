@@ -28,7 +28,7 @@ class CVX1 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
-        self.XStart = np.array([-1.,-2.])
+        self.XStart = np.array([1,3])
         self.optimumPoint = np.array([1.,1])
         self.optimumValue = 0.0
 
@@ -234,6 +234,7 @@ class MaxQuad (Kernel):
     
       
 class Rosenbrock (Kernel):
+    '''non convessa'''
     def __inizialize__(self, dimension):
         if dimension != 2:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -246,6 +247,28 @@ class Rosenbrock (Kernel):
     
     def _gf1(self, x):
         return np.array([2*(200*x[0]**3 - 200*x[1]*x[0] + x[0] -1), 200*(x[1]-x[0]**2)])
+    
+class Crescent (Kernel):
+    '''non convex'''
+    def __inizialize__(self, dimension):
+        if dimension != 2:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.optimumPoint = np.array([0,0])
+        self.optimumValue = 0.0
+        self.XStart = np.array([-1.5,2])
+
+    def _f11(self, x):
+        return x[0]**2 + (x[1] - 1)**2 + x[1] -1
+    def _f12(self, x):
+        return -x[0]**2 - (x[1] - 1)**2 + x[1] +1
+    
+    def _f1(self, x):
+        return max(self._f11(x),self._f12(x))
+    
+    def _gf1(self, x):
+        if i := np.argmax([self._f11(x),self._f12(x)]) :
+            return np.array([-2*x[0],3-2*x[1]]) 
+        return np.array([2*x[0],3-2*x[1]]) 
 
 probList_covx = [
     # (Parab,[2, 5, 20]),
@@ -257,5 +280,10 @@ probList_covx = [
     (MaxQuad,[10]),
     (CB2,[2]),
     (CB3,[2]),
-    (Rosenbrock,[2]),
 ]
+
+probList_no_covx = [
+    (Rosenbrock,[2]),
+    (Crescent,[2]),
+]
+
