@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+# type: ignore
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl

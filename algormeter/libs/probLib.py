@@ -234,12 +234,11 @@ class MaxQuad (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 10:
             raise ValueError(f'Dimension {dimension} not supported ')
-        self.XStart = np.ones(dimension)
-        # self.optimumPoint = np.array([-0.1263, -0.0346, -0.0067,  0.0264,  0.0673, -0.2786, 0.0744,  0.1387, 0.0839,  0.0385]) # libro
-        # self.optimumValue =  -0.8408994234967448 # calcolato con valore libro
-        self.optimumPoint = np.array([-0.1261166, -0.0343653, -0.0067986,  0.0263768,  0.0671908, -0.278298, 0.0742674 , 0.1385148,  0.08394,    0.038513 ]) # trovati con alg
-        self.optimumValue = -0.8414073 # [-0.841408 valore calcolato] 
-
+        self.XStart = np.zeros(dimension) # alternativo
+        self.XStart = np.ones(dimension) # primario
+        self.optimumPoint = np.array([-0.1262922, -0.0343347, -0.0068291,  0.0263796,  0.067307,  -0.2783819,0.074205,   0.1385046,  0.0840276,  0.0385804])
+        self.optimumValue = -0.8414084 
+ 
     def _f11(self,x):
         r, c, s = data.mqA.shape
         return [x @ data.mqA[:,:,_] @ x - data.mqB[:,_] @ x for _ in range(s)]
@@ -290,6 +289,7 @@ class Crescent (Kernel):
         return np.array([2*x[0],3-2*x[1]]) 
     
 class Rosen (Kernel):
+    '''Rosen-Suzuki'''
     def __inizialize__(self, dimension):
         if dimension != 4:
             raise ValueError(f'Dimension {dimension} not supported ')
@@ -331,10 +331,48 @@ class Rosen (Kernel):
                 return np.array([2*x[0] -5, 2*x[1] -5, 4*x[2] -21, 2*x[3] +7 ]) + \
                         10*np.array([2*x[0] +2, 2*x[1]-1, 2*x[2], -1 ])
 
+      
+class Shor (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 5:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        # self.optimumPoint = np.array([1.1244,0.9795,1.4777,0.9202,1.1243]) # libro
+        self.optimumPoint = np.array([1.1243585, 0.9794594, 1.4777118, 0.9202446, 1.1242887])
+        self.optimumValue = 22.60016
+        self.XStart = np.array([0.,0.,0.,0.,1.]) # f(x*) -> 80  
 
+    def _f11(self,x,i):
+        s = 0.
+        for j in range(5):
+            s = s + data.shB[i]*(x[j]-data.shA[i,j])**2
+        return s
 
+    def _f1(self, x):            
+        return max([self._f11(x,r) for r in range(10)])
+    
+    def _gf1(self, x):
+        i = np.argmax([self._f11(x,r) for r in range(10) ])
+        return np.array([2*data.shB[i]*(x[j]-data.shA[i,j]) for j in range(5)])
+    
+class Goffin (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 50:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.optimumPoint = np.zeros(dimension)
+        self.optimumValue = 0.
+        self.XStart = np.array([i+1 - 25.5 for i in range(50)])  
+
+    def _f1(self, x):   
+        return 50*max(x) - np.sum(x)
+    
+    def _gf1(self, x):
+        i = np.argmax(x)
+        rv = -np.ones(self.dimension)
+        rv[i]= 49.
+        return rv
+    
 probList_covx = [
-    # (Parab,[2, 5, 20]),
+    (Parab,[2, 5, 20]),
     (DemMal,[2]),
     (Mifflin1,[2]),
     (Mifflin2,[2]),
@@ -345,10 +383,13 @@ probList_covx = [
     (CB2,[2]),
     (CB3,[2]),
     (Rosen,[4]),
+    (Shor,[5]),
+    (Goffin,[50]),
 ]
 
 probList_no_covx = [
     (Rosenbrock,[2]),
     (Crescent,[2]),
 ]
+
 

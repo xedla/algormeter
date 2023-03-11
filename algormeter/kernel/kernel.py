@@ -270,6 +270,8 @@ class Kernel:
                 return 'Success'
             if self.isTimeout:
                 return 'Timeout'
+            if self.K == self.maxiterations:
+                return 'MaxIter'
             return 'Fail'
         counter.disable()
         stat = {"Problem" : str(self),
@@ -302,7 +304,7 @@ class Kernel:
             raise ValueError('bad dimension')
         self.XStart = np.array(startPoint)
 
-    def randomSet(self, center = 0., size =1.):
+    def randomSet(self, center:float = 0., size: float = 1.) -> None:
         ''' set random run center and size'''
         self.startRandRect = np.array([center - size, center + size])
 

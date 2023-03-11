@@ -2,7 +2,9 @@
 
 from algormeter import *
 from numpy.linalg import norm
-from math import sqrt, log
+from math import sqrt
+from algormeter.tools import counter, dbx
+
 
 Param.TMAX = 3. # type: ignore
 Param.TMIN = .05 # type: ignore
