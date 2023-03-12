@@ -1,8 +1,9 @@
-'''Convex Problems library
+'''Problems library
 '''
 
 import numpy as np
 from algormeter.kernel import *
+
 
  
 class Parab (Kernel):
@@ -20,6 +21,66 @@ class Parab (Kernel):
     
     def _gf1(self, x):
         return 2.*x
+
+
+class ParAbs (Kernel):
+    '''
+    _f1: X**2 
+    _f2: Abs
+    '''
+    def __inizialize__(self, dimension):
+        self.optimumPoint = np.ones(dimension)*.5
+        self.optimumValue = -0.25*dimension
+        self.XStart = np.ones(self.dimension)*.1 # (1,1, ...,1)
+
+    def _f1(self, x : list):
+        return np.sum(np.array(x)**2)
+    
+    def _gf1(self, x):
+        return 2.*x
+    
+    def _f2(self,x : list):
+        return np.sum(abs(np.array(x)))
+
+    def _gf2(self, x):
+        return np.sign(np.array(x))
+
+    def success(self):
+        ''' Sono punti di ottimo tutti i punti (x1, ..., xn) dove x(i) = .5 o -.5
+        '''
+        if np.allclose(abs(self.optimumPoint),abs(self.XStar),rtol=self.relTol,atol=self.absTol):
+            self.optimumPoint = self.XStar
+            return True
+        return False
+
+    
+class Acad (Kernel):
+    '''
+    Academic test problem 
+        [-1, -1] global minimum
+        [-1, 0],[0, -1],[0, 0] critical and no optimal 
+    '''
+    def __inizialize__(self, dimension):
+        if dimension != 2:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.optimumPoint = np.array([-1.,-1])
+        self.optimumValue = -2.0
+        self.randomSet(0.,3) # XStart in [-1.5...1.5, -1.5...1.5,]
+        self.XStart = np.ones(self.dimension)*.1 
+        self.XStart = np.array([+.7, -1.3])
+
+    def _f1(self, x : list) -> float:
+        return 3/2*(x[0]**2 + x[1]**2) + x[0] + x[1]
+    
+    def _gf1(self, x):
+        return np.array([ 3*x[0] + 1 ,3*x[1] + 1])
+    
+    def _f2(self,x : list) -> float:
+        return abs(x[0]) +  abs(x[1]) + 1/2*(x[0]**2 + x[1]**2)
+
+    def _gf2(self, x):
+        return np.array([sign(x[0]) + x[0],sign(x[1]) + x[1]])
+
 
 class CVX1 (Kernel):
     '''Convex 1
@@ -142,6 +203,27 @@ class MAXQ (Kernel):
         i=np.argmax(x**2)
         v = np.zeros(self.dimension)
         v[i] = 2*x[i]
+        return v
+    
+
+class MAXL (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 20:
+            raise ValueError(f'Dimension {dimension} not supported ')
+        self.XStart = np.zeros(dimension)
+        for i in range(10):
+            self.XStart[i] = i
+            self.XStart[i+10] = -i
+        self.optimumPoint = np.zeros(dimension)
+        self.optimumValue = 0.
+
+    def _f1(self, x) :
+        return np.max(np.abs(x))
+    
+    def _gf1(self, x):
+        i=np.argmax(np.abs(x))
+        v = np.zeros(self.dimension)
+        v[i] = np.sign(x[i])
         return v
     
 class QL (Kernel):
@@ -372,16 +454,16 @@ class Goffin (Kernel):
         return rv
     
 probList_covx = [
-    (Parab,[2, 5, 20]),
     (DemMal,[2]),
+    (CB2,[2]),
+    (CB3,[2]),
     (Mifflin1,[2]),
     (Mifflin2,[2]),
     (LQ,[2]),
     (QL,[2]),
     (MAXQ,[20]),
+    (MAXL,[20]),
     (MaxQuad,[10]),
-    (CB2,[2]),
-    (CB3,[2]),
     (Rosen,[4]),
     (Shor,[5]),
     (Goffin,[50]),
@@ -391,5 +473,12 @@ probList_no_covx = [
     (Rosenbrock,[2]),
     (Crescent,[2]),
 ]
+
+probList_base = [
+    (Parab,[2, 5, 500]),
+    (ParAbs,[2,5,10,100]),
+    (Acad,[2]),
+]
+
 
 
