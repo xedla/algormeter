@@ -76,22 +76,38 @@ class Kernel:
         return r, flags # flags is None if x not exist in cache
 
 ## problem interface
-    def __init__ (self, dimension : int =2) :
+    def __init__ (self, dimension : int =2, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
+                csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) :
         self.dimension = dimension 
         self.initCache(dimension)
         self.isRandomRun = False
         self.__inizialize__(dimension)
+        '''configure with default value'''
+        self.trace = trace
+        self.csv = csv
+        self.timeout = timeout
+        self.maxiterations = iterations
+        self.relTol = relTol 
+        self.absTol = absTol 
+        self.savedata = savedata
+        self.Xk = self.XStart
+
         self.randomSet() # default random run param
         self.label = ''
         self.isf1_only = 'Kernel' in self._f2.__qualname__ and 'Kernel' in self._gf2.__qualname__
-        self.config() 
         self.K = -1
         self.Xk = self.XStart
         self.Xprev = self.Xk
         self.fXkPrev = math.inf
+        if self.savedata is True:
+            self.data = np.zeros([Kernel.SAVEDATABUFFERSIZE,self.dimension+1]) # +1 per fx
+            self.X = self.data[:,:-1] 
+            self.Y = self.data[:,-1] 
         self.clearCache()
         counter.reset()
         self.recalc(self.XStart)
+
+    
 
     def __inizialize__(self, dimension : int):
         self.optimumPoint = np.zeros(dimension)

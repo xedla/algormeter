@@ -40,7 +40,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
         - **kwargs: python kwargs propagated to algorithms
     '''
 
-    def algoRun (algorithm, experiment, **kwargs ):
+    def algoRun (algorithm, experiment, exceptionOn = False, **kwargs ):
         def checkTunePar(ls):
             if not ls:
                 return
@@ -94,8 +94,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
             excp = None
             for varStat in scanParams(tuneParameters):
                 for _ in range(runs):
-                    p = problem (dimension=dim)  
-                    p.config(**kwargs)
+                    p = problem (dim, **kwargs)  
                     p.setLabel(algoDescr)
                     excp = None
                     try:
@@ -109,7 +108,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
                     except (ArithmeticError, Exception) as e:
                         excp = e
                         counter.log (str(e), 'Error')
-                        if (dbprint or trace) and excp :
+                        if (exceptionOn or dbprint or trace) and excp :
                             raise e
                     finally:
                         if tuneParameters:
