@@ -111,7 +111,7 @@ class JB04 (Kernel):
         return self.dimension * np.max(np.abs(x))
     
     def _f2(self,x ):
-        return np.sum(abs(x))
+        return np.sum(np.abs(x))
 
     def _gf1(self, x): 
         a = np.zeros (self.dimension)
@@ -128,15 +128,10 @@ class JB05 (Kernel):
         self.XStart[0] = 1./dimension #"bagirov OMS 2002.pdf"
         self.optimumPoint = np.ones(dimension)/self.dimension
         self.optimumValue = 0.0
+        self.tm = np.outer(np.arange(1,21)*0.05,np.ones(dimension)) ** np.arange(dimension)
 
     def ff(self,x):
-        r = np.zeros(20)
-        t = np.arange(1,21)*0.05
-
-        for j in range(20):
-            for i in range(self.dimension):
-                r[j] = r[j] + (x[i]-self.optimumPoint[i])*t[j]**i
-        return r
+        return self.tm @ (x - self.optimumPoint)
     
     def _f1(self,x):
         return 20*np.max(abs(self.ff(x)))
@@ -145,22 +140,13 @@ class JB05 (Kernel):
         return np.sum(abs(self.ff(x)))
 
     def _gf1(self,x):
-        v = np.zeros(self.dimension)
-        t = np.arange(1,21)*0.05
         r = self.ff(x)
         m = np.argmax(abs(r))
-        for i in range(v.size):
-            v[i] = sign(r[m])*t[m]**i
-        return 20*v
+        return 20*(self.tm[m] * np.sign(r[m])) 
 
     def _gf2(self,x):
-        v = np.zeros(self.dimension)
-        t = np.arange(1,21)*0.05
         r = self.ff(x)
-        for i in range(v.size):
-            for j in range(20):
-                v[i] = v[i] + sign(r[j])*t[j]**i
-        return v
+        return np.sign(r) @ self.tm  
 
 class JB06 (Kernel):
     def __inizialize__(self, dimension):
