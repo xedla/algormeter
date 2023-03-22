@@ -139,7 +139,7 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
         for alg in algorithms:
             dfl.append(algoRun(experiment=exp,algorithm=alg,tuneParameters = tuneParameters,
                 iterations=iterations, timeout = timeout, runs = runs, trace = trace, csv = csv, dbprint=dbprint,
-                absTol = absTol, relTol = relTol, savedata = savedata ))
+                absTol = absTol, relTol = relTol, savedata = savedata, **kwargs ))
 
     if not dfl:
         print('Empty result')
