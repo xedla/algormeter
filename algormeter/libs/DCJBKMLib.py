@@ -9,7 +9,7 @@ from algormeter.kernel import *
 class JB01 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([1.,1.])
         self.optimumValue = 2.0
         self.XStart = np.array([2.,2.])
@@ -55,7 +55,7 @@ class JB01 (Kernel):
 class JB02 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([-1.2,1.])
         self.optimumPoint = np.array([1.,1.])
         self.optimumValue = 0.0
@@ -75,7 +75,7 @@ class JB02 (Kernel):
 class JB03 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 4:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([1.,3.,3.,1.])
         self.optimumPoint = np.array([1.,1.,1.,1.])
         self.optimumValue = 0.0
@@ -151,7 +151,7 @@ class JB05 (Kernel):
 class JB06 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([10.,1.])
         self.optimumPoint = np.array([5.,0.])
         self.optimumValue = -2.5
@@ -174,7 +174,7 @@ class JB06 (Kernel):
 class JB07 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([-2.,1.])
         self.optimumPoint = np.array([.5,.5])
         self.optimumValue = 0.5
@@ -222,7 +222,7 @@ class JB07 (Kernel):
 class JB08 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 3:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([.5,.5,.5])
         self.optimumPoint = np.array([.75,1.25,.25])
         self.optimumValue = 3.5
@@ -266,7 +266,7 @@ class JB08 (Kernel):
 class JB09 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 4:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([4.,2.,4.,2])
         self.optimumPoint = np.array([7/3.,1./3,.5,2.])
         self.optimumValue = 11/6.

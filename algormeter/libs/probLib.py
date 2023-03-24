@@ -7,10 +7,6 @@ from algormeter.kernel import *
 
  
 class Parab (Kernel):
-    '''
-    _f1: Parabola with min in 0
-    _f2: zero
-    '''
     def __inizialize__(self, dimension):
         self.optimumPoint = np.zeros(dimension)
         self.optimumValue = 0.0
@@ -22,6 +18,19 @@ class Parab (Kernel):
     def _gf1(self, x):
         return 2.*x
 
+Smooth = Parab
+
+class AbsVal (Kernel):
+    def __inizialize__(self, dimension):
+        self.optimumPoint = np.zeros(dimension)
+        self.optimumValue = 0.0
+        self.XStart = np.ones(dimension)*2 # (1,1, ...,1)
+
+    def _f1(self, x):
+        return np.sum(np.abs(np.array(x)))
+    
+    def _gf1(self, x):
+        return np.sign(x)
 
 class ParAbs (Kernel):
     '''
@@ -62,7 +71,7 @@ class Acad (Kernel):
     '''
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([-1.,-1])
         self.optimumValue = -2.0
         self.randomSet(0.,3) # XStart in [-1.5...1.5, -1.5...1.5,]
@@ -87,7 +96,7 @@ class CVX1 (Kernel):
     '''
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([1,3])
         self.optimumPoint = np.array([1.,1])
         self.optimumValue = 0.0
@@ -105,7 +114,7 @@ class DemMal (Kernel):
 
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([0.,-3.])
         self.optimumValue = -3.0
         self.XStart = np.array([1.,1.])
@@ -125,7 +134,7 @@ class DemMal (Kernel):
 class Mifflin1 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([.8,.6])
         self.optimumPoint = np.array([1.,0])
         self.optimumValue = -1.
@@ -145,7 +154,7 @@ class Mifflin1 (Kernel):
 class Mifflin2 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([-1.,-1.])
         self.optimumPoint = np.array([1.,0])
         self.optimumValue = -1.
@@ -165,7 +174,7 @@ class Mifflin2 (Kernel):
 class LQ (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([-.5,-.5])
         sq2 = np.sqrt(2)
         self.optimumPoint = np.array([1./sq2,1./sq2])
@@ -189,7 +198,7 @@ class LQ (Kernel):
 class MAXQ (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 20:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.zeros(dimension)
         for i in range(10):
             self.XStart[i+10] = -i
@@ -209,7 +218,7 @@ class MAXQ (Kernel):
 class MAXL (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 20:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.zeros(dimension)
         for i in range(10):
             self.XStart[i] = i
@@ -229,7 +238,7 @@ class MAXL (Kernel):
 class QL (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([-1.,5.])
         self.optimumPoint = np.array([1.2,2.4])
         self.optimumValue = 7.2
@@ -257,7 +266,7 @@ class QL (Kernel):
 class CB2 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([1.,-.1])
         self.optimumPoint = np.array([1.1392286, 0.899365])
         # self.optimumValue = 1.9522245 # value on paper. Float not double like python?
@@ -287,7 +296,7 @@ class CB2 (Kernel):
 class CB3 (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.array([2.,2.])
         self.optimumPoint = np.array([1., 1.])
         self.optimumValue = 2.
@@ -315,7 +324,7 @@ import algormeter.libs.data as data
 class MaxQuad (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 10:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.XStart = np.zeros(dimension) # alternativo
         self.XStart = np.ones(dimension) # primario
         self.optimumPoint = np.array([-0.1262922, -0.0343347, -0.0068291,  0.0263796,  0.067307,  -0.2783819,0.074205,   0.1385046,  0.0840276,  0.0385804])
@@ -337,7 +346,7 @@ class Rosenbrock (Kernel):
     '''non convessa'''
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([1,1])
         self.optimumValue = 0.0
         self.XStart = np.array([-1.2,1])
@@ -352,7 +361,7 @@ class Crescent (Kernel):
     '''non convex'''
     def __inizialize__(self, dimension):
         if dimension != 2:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([0,0])
         self.optimumValue = 0.0
         self.XStart = np.array([-1.5,2])
@@ -374,7 +383,7 @@ class Rosen (Kernel):
     '''Rosen-Suzuki'''
     def __inizialize__(self, dimension):
         if dimension != 4:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.array([0,1,2,-1])
         self.optimumValue = -44.
         self.XStart = np.zeros(4)
@@ -417,7 +426,7 @@ class Rosen (Kernel):
 class Shor (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 5:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         # self.optimumPoint = np.array([1.1244,0.9795,1.4777,0.9202,1.1243]) # libro
         self.optimumPoint = np.array([1.1243585, 0.9794594, 1.4777118, 0.9202446, 1.1242887])
         self.optimumValue = 22.60016
@@ -439,7 +448,7 @@ class Shor (Kernel):
 class Goffin (Kernel):
     def __inizialize__(self, dimension):
         if dimension != 50:
-            raise ValueError(f'Dimension {dimension} not supported ')
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
         self.optimumPoint = np.zeros(dimension)
         self.optimumValue = 0.
         self.XStart = np.array([i+1 - 25.5 for i in range(50)])  
@@ -453,7 +462,49 @@ class Goffin (Kernel):
         rv[i]= 49.
         return rv
     
+    
+class TR48 (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 48:
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
+        self.optimumPoint = data.TR48_OP
+        self.optimumValue = -638565.
+        self.XStart = np.zeros(dimension,dtype=float)  
+
+    def _f1(self, x):   
+        return data.TR48_D @ np.max(x - data.TR48_A,axis=1) - data.TR48_S @ x
+    
+    def _gf1(self, x):
+        rv = -data.TR48_S
+        for j in range(self.dimension):
+            i = np.argmax (x - data.TR48_A[j])
+            rv[i] += data.TR48_D[j]
+        return rv
+    
+    
+class A48 (Kernel):
+    def __inizialize__(self, dimension):
+        if dimension != 48:
+            raise ValueError(f'{self}: dimension {dimension} not supported ')
+        self.optimumPoint = data.A48_OP
+        self.optimumValue = -9870.
+        self.XStart = np.zeros(dimension,dtype=float)
+        self.D = np.ones(self.dimension)  
+        self.S = np.ones(self.dimension)  
+
+    def _f1(self, x):   
+        return self.D @ np.max(x - data.TR48_A,axis=1) - self.S @ x
+    
+    def _gf1(self, x):
+        rv = -self.S
+        for j in range(self.dimension):
+            i = np.argmax (x - data.TR48_A[j])
+            rv[i] += self.D[j]
+        return rv
+    
 probList_covx = [
+    (Smooth,[50000]),
+    (AbsVal,[50000]),
     (DemMal,[2]),
     (CB2,[2]),
     (CB3,[2]),
@@ -467,6 +518,8 @@ probList_covx = [
     (Rosen,[4]),
     (Shor,[5]),
     (Goffin,[50]),
+    (TR48,[48]),
+    (A48,[48]),
 ]
 
 probList_no_covx = [
