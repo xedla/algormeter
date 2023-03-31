@@ -76,7 +76,7 @@ class Kernel:
         return r, flags # flags is None if x not exist in cache
 
 ## problem interface
-    def __init__ (self, dimension : int =2, iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
+    def __init__ (self, dimension : int , iterations : int =500, timeout : int = 180, trace : bool = False, savedata : bool = False,
                 csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) :
         self.dimension = dimension 
         self.initCache(dimension)
@@ -270,8 +270,9 @@ class Kernel:
 
     def stop(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
-        if np.array_equal(self.Xk, self.Xprev):
+        if np.array_equal(self.Xk, self.Xprev): # if null step 
             return False
+
         rc = bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
                   or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
         return rc

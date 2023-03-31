@@ -102,8 +102,6 @@ p1 is a detailed report with the following columns.
 ```python
     def stop(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
-        if np.array_equal(self.Xk, self.Xprev):
-            return False
         return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
                   or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
 
@@ -117,9 +115,9 @@ can be overriden like in
 
 ```python
     def stop():
-        return bool(np.isclose(p.f(p.Xk), p.optimumValue,atol=p.absTol, rtol= p.relTol)) or \
-                bool(np.allclose (p.Xk, p.optimumPoint,rtol=p.relTol,atol=p.absTol))
-    
+        ...
+        return status 
+
     p.stop = stop
     p.isSuccess = stop
 

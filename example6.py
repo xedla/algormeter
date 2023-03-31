@@ -5,7 +5,7 @@ from algormeter import *
 # define my problem parameters dependent 
 class MyProb (Kernel):
     def __inizialize__(self, dimension):
-        self.XStart = np.ones(self.dimension)*K #  K param
+        self.XStart = np.ones(dimension)*K #  K param
     def _f1(self, x):
         return np.sum(np.array(x)**2) 
     def _gf1(self, x):
@@ -23,7 +23,7 @@ def myAlgo(p, **kwargs):
 # ...apply my algorithm to my problem
 for H in [3,5]:
     for K in [1,2,4]:
-        p = MyProb() 
+        p = MyProb(2) 
         found, x, y = p.minimize(myAlgo)
 
         print(f'With K:{K}, H:{H} found:{found}, y is {y} at {x}')
