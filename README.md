@@ -4,7 +4,8 @@ AlgorMeter is a python implementation of an  environment for develop, test, meas
 Having a common platform that simplifies developing, testing and exchange of optimization algorithms allows for better collaboration and sharing of resources among researchers in the field. This can lead to more efficient development and testing of new algorithms, as well as faster progress in the field overall.
 AlgorMeter produces comparative measures among algorithms  in csv format with effective test function call count.  
 It embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  
-AlgorMeter contains a standard library of 10 DC problems and 7 convex problems for testing algorithms. More problem collections can be easily added.
+AlgorMeter contains a standard library of 10 DC problems and 7 convex problems for testing algorithms. More problem collections can be easily added.  
+AlgorMeter provide integrated performance profiles graphics, as developed by E. D. Dolan and J. J. More. They are a powerful standard tool, within the optimization community, to assess the performance of optimization software. 
 
 ## problems + algorithms = experiments
 
@@ -97,7 +98,7 @@ p1 is a detailed report with the following columns.
 - ... : other columns with count to counter.up utility (see below)
 
 
-###  Stop and success condition
+## Stop and success condition
 
 ```python
     def stop(self) -> bool:
@@ -115,14 +116,15 @@ can be overriden like in
 
 ```python
     def stop():
-        ...
         return status 
+        ...
 
     p.stop = stop
     p.isSuccess = stop
 
 ```
-
+Another maybe simplet way is to call statement break in main loop.  
+See example3.py
 ## Problems function call optimization
 
 AlgorMeter embeds a specific feature devoted to optimize the number of function calls, so that multiple function  calls at the same point are accounted for just once, without storing intermediate results, with benefit in terms of algorithm coding.  So in algorithm implementation is not necessary to store the previous result in variables to reduce f1, f2, gf1, gf2 function calls. AlgorMeter cache 128 previous calls to obtain such automatic optimization.  
@@ -149,13 +151,15 @@ Instruction like
 
 is used to count events in code, summerized in statistics at the end of experiment as a column, available in dataframe returned by call to algorMeter and in final csv.
 For the code above a column with count of counter.up calls and head 'qp.lb>0' is produced.  
-Also are automatically available columns 'f1', 'f2', 'gf1', 'gf1' with effective calls to f1, f2, gf1, gf2
+Also are automatically available columns 'f1', 'f2', 'gf1', 'gf1' with effective calls to f1, f2, gf1, gf2  
+See example3.py
 
 ### dbprint = True
 
-Instruction dbx.print produce print out only if algorMeter call ha option dbptint == True
+Instruction dbx.print produce print out only if algorMeter call ha option dbprint == True
 > dbx.print('t:',t, 'Xprev:',Xprev, 'f(Xprev):',p.f(Xprev) ).  
 
+See example3.py  
 NB: If dbprint = True python exceptions are not handled and raised.
 
 ### Trace == True
@@ -166,7 +170,8 @@ If Default.TRACE = True a line with function values are shown as follows in the 
 > Acad-2 k:2,f:-1.754,x:[-0.9995 -1.4962],gf:[ 9.6832e-04 -9.9250e-01],f1:2.361,gf1:[-1.9985 -3.4887],f2:4.115,gf2:[-1.9995 -2.4962]
 
 These lines represent the path followed by the algorithm for the specific problem.  
-NB: If trace = True python exceptions are not handled and raised.
+NB: If trace = True python exceptions are not handled and raised.  
+See example3.py
 
 ### tuneParameters
 Some time is necessary tune some parameter combinations.  Procede as follow (See example4.py):
@@ -183,7 +188,7 @@ tpar = [ # [name, [values list]]
 
 - call algorMeter with csv = True and tuneParameters=<list of parameters values> like tuneParameters=tpar.
 - open csv file produced and analyze the performance of parameters combinations by looking column '# tunePar'. Useful is a pivot table on such column.
-
+See example4.py
 ## Random start point 
 
 If algorMeter parameter run is set with a number greater than 1, each algorithm is repeated on the same problem with random start point in range -1 to 1 for all dimensions.
@@ -200,6 +205,18 @@ Y = data[:,-1]
 File name is like 'gradient,JB05-50.npy'.  
 These files are read by viewer.py data visualizer.
 
+## Performance Profile
+Performance profiles graphics, as developed by E. D. Dolan and J. J. More, are a powerful tool to assess the performance of optimization software. For this reason they are standard accepted within the optimization community. See example2.py
+
+```python
+    df, pv = algorMeter(algorithms = algorithms, ...)
+
+    perfProf(df, cost= ['f1','Iterations'] ) 
+    # df: first pandas dataframe output of algormeter call
+    # costs: list of column labels in df
+
+    plt.show(block=True)
+```
 ## Minimize
 
 In case you need to find the minimum of a problem/function by applying an algorithm developed with algormeter, the minimize method is available. (See example6.py):
@@ -213,6 +230,16 @@ In case you need to find the minimum of a problem/function by applying an algori
 
 Running visualizer.py produce or updates contour image in folder 'pics' for each experiment with dimension = 2 with data in folder 'npy'.
 
+# Examples index
+
+- example1.py: Simplest possible example 
+- example2.py: Dolan, More performance profile
+- example3.py: dbx.print, trace,counter.up, counter.log, override stop, break  example
+- example4.py: algorithm parameters tuning 
+- example5.py: multiple run of each problem with random start point
+- example6.py: minimize new problem with algometer algorithm
+
+
 # Acknowledgment
 
 Algormeter was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
@@ -224,8 +251,6 @@ https://github.com/xedla/algormeter
 If you see a mistake you can send me a mail at pietrodalessandro@gmail.com 
 If you open up a ticket, please make sure it describes the problem or feature request fully.  
 Any suggestion are welcome.
-# WARNING
-AlgorMeter is still in the early stages of development. 
 
 # License
 **If you use AlgorMeter for the preparation of a scientific paper, the citation with a link to this repository would be appreciated.**

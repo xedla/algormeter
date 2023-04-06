@@ -1,4 +1,4 @@
-# minimize method example
+# minimize new problem with algometer algorithm
 
 from algormeter import *
 

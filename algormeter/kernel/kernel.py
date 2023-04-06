@@ -198,9 +198,9 @@ class Kernel:
         
         if self.K == 0: print()
         if self.isf1_only:
-            print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
+            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
         else:
-            print(CB,f'{repr(self)} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
+            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
 
     def recalc(self,x):
         '''Recalc at step k
@@ -298,7 +298,7 @@ class Kernel:
                 "f(XStar)": f'{float(self.f(self.XStar)):.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
                 'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.2E}',
-                "Seconds" :f'{(tm.default_timer() - self.startTime):.2f}',
+                "Seconds" :f'{(tm.default_timer() - self.startTime):.4f}',
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
                 "Start point": self._pp(self.XStart),
@@ -342,10 +342,10 @@ class Kernel:
             print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
 
     def __str__ (self):
-        return self.__class__.__name__  
+        return self.__class__.__name__
 
     def __repr__ (self):
-        return self.__class__.__name__ + "-" +str(self.dimension)
+        return super(Kernel, self).__repr__() + " Dimension:" +str(self.dimension)
   
     def setLabel(self,label):
         self.label = label

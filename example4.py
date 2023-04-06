@@ -1,4 +1,4 @@
-# tuneParams example
+# tuneParams: algorithm parameters tuning
 import pandas as pd
 
 from algormeter import *
@@ -20,30 +20,14 @@ problems = [
             (Parab,[2,4,6]),
             (ParAbs,[2]),
             (Acad,[2]),
-
-            # (JB01,[2]), 
-            # (JB02,[2]), 
-            # (JB03,[4]),
-            # (JB04,[2,5,10]),
-            # (JB05,[2,5,10]),
-            # (JB06,[2]),
-            # (JB07,[2]), 
-            # (JB08,[3]),
-            # (JB09,[4]),
-            # (JB10,[2,4,5]),
         ]
 
 algorithms = [
-                # alg.polyak,
-                # alg.loggradient,
-                # alg.gradient,
                 gradient,
         ]
 
 dff, pv = algorMeter(algorithms = algorithms, problems = problems, iterations = 3000,
                     tuneParameters=tpar, 
-                    #  trace=True, 
-                     # dbprint = True 
                      )
 
 print('\n', dff)

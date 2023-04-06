@@ -5,8 +5,7 @@ import numpy as np
 from algormeter.kernel import *
 
 
- 
-class Parab (Kernel):
+class Smooth (Kernel):
     def __inizialize__(self, dimension):
         self.optimumPoint = np.zeros(dimension)
         self.optimumValue = 0.0
@@ -18,7 +17,7 @@ class Parab (Kernel):
     def _gf1(self, x):
         return 2.*x
 
-Smooth = Parab
+Parab = Smooth
 
 class AbsVal (Kernel):
     def __inizialize__(self, dimension):
@@ -528,7 +527,7 @@ probList_no_covx = [
 ]
 
 probList_base = [
-    (Parab,[2, 5, 500]),
+    (Smooth,[2, 5, 500]),
     (ParAbs,[2,5,10,100]),
     (Acad,[2]),
 ]
