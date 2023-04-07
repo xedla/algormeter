@@ -7,6 +7,8 @@ It embeds a specific feature devoted to optimize the number of function calls, s
 AlgorMeter contains a standard library of 10 DC problems and 7 convex problems for testing algorithms. More problem collections can be easily added.  
 AlgorMeter provide integrated performance profiles graphics, as developed by E. D. Dolan and J. J. More. They are a powerful standard tool, within the optimization community, to assess the performance of optimization software. 
 
+<img src="figs/perfprof.png" alt="Performance profiles" width="800px" height="391px"/>
+
 ## problems + algorithms = experiments
 
 - A problem is a function f where f: R(n) -> R with n called dimension.  
@@ -54,7 +56,12 @@ df, pv = algorMeter(algorithms = [gradient], problems = probList_covx, iteration
 print('\n', pv,'\n', df)
 ```
 
-pv and df are pandas dataframe with run result. A .csv file with result is also created in csv folder. 
+pv and df are pandas dataframe with run result. 
+
+<img src="figs/dataframe.png" alt="dataframe result" width="720px" height="230px"/>
+
+A .csv file with result is also created in csv folder. 
+
 
 *(see example\*.py)*
 
@@ -123,7 +130,7 @@ can be overriden like in
     p.isSuccess = stop
 
 ```
-Another maybe simplet way is to call statement break in main loop.  
+Another maybe more simple way is to call statement break in main loop.  
 See example3.py
 ## Problems function call optimization
 
