@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "algormeter"
+version = "1.0.0"
+authors = [
+  { name="Pietro d Alessandro", email="pietrodalessandro@gmail.com" },
+]
+description = "Tool for developing, testing and measuring optimizers algorithms"
+keywords = ["convex-optimization", "optimization-algorithms","difference-convex-function"]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pandas",
+    "matplotlib",
+    "numpy",
+]
+
+
+[project.urls]
+"Homepage" = "https://github.com/xedla/algormeter.git"
+"Bug Tracker" = "https://github.com/xedla/algormeter/issues"
+
