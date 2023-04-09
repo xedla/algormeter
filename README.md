@@ -218,9 +218,17 @@ Performance profiles graphics, as developed by E. D. Dolan and J. J. More, are a
 ```python
     df, pv = algorMeter(algorithms = algorithms, ...)
 
-    perfProf(df, cost= ['f1','Iterations'] ) 
+    perfProf(df, costs= ['f1','Iterations'] ) 
     # df: first pandas dataframe output of algormeter call
     # costs: list of column labels in df
+
+    plt.show(block=True)
+```
+It is possible to graph performance profiles by preparing a pandas data frame using a spreadsheet with the mandatory columns 'Problem','Dim','Algorithm','Status' and the columns costs that you want to draw
+```python
+    df = pd.read_excel(r'Path of Excel file\File name.xlsx', sheet_name='your Excel sheet name')
+
+    perfProf(df, costs= ['cost1','cost2'] ) 
 
     plt.show(block=True)
 ```
