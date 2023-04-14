@@ -95,9 +95,12 @@ def perfProf(df: pd.DataFrame, costs: list[str]) -> None:
         ax[i].set_xscale('log')
         ax[i].set_title(c,fontsize=fontsize)
         ax[i].legend(fontsize=fontsize)
-        fig.tight_layout()
+        ax[i].tick_params(axis='both', which='major', labelsize=fontsize)
+        ax[i].tick_params(axis='both', which='minor', labelsize=fontsize)
+
     for i in range(cl,nr*nc):
         ax[i].axis('off')
+    fig.tight_layout()
 
 
 if __name__ == '__main__':
