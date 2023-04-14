@@ -147,7 +147,8 @@ def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[
         
     df = pd.concat(dfl).sort_values(by=['Problem','Dim','Algorithm']) if len(dfl) > 1 else dfl[0]
     df = df.reset_index(drop=True)
-    df['Delta'] = pd.to_numeric(df['Delta'])
+    df = df.astype({'Dim':int, 'Delta':float}) 
+
 
     if csv:
         if hasattr(__main__, '__file__'):
