@@ -307,7 +307,7 @@ class Kernel:
         counter.enable()
         return stat
 
-    def minimize(self,algorithm : Callable, iterations : int = 500, trace : bool = False, **kargs) -> tuple[bool, np.ndarray , np.ndarray]:
+    def minimize(self,algorithm : Callable, iterations : int = 500, trace : bool = False, dbprint: bool = False, **kargs) -> tuple[bool, np.ndarray , np.ndarray]:
         '''Find  minimum of a problem/function by applying an algorithm developed with algormeter.
             returns (Success, X, f(X))
         '''
