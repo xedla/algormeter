@@ -16,13 +16,13 @@ tpar = [ # [name, [values list]]
     # ('Param.beta', [1., 2., 3.]),
 ]
 
-problems = [
+problems : Problems = [
             (Parab,[2,4,6]),
             (ParAbs,[2]),
             (Acad,[2]),
         ]
 
-algorithms = [
+algorithms : Algorithms = [
                 gradient,
         ]
 

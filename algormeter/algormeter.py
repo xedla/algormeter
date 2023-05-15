@@ -19,15 +19,23 @@ from algormeter.tools import counter, dbx
 class Param:
     ...
 
+from typing import Optional, Callable, Any, List, Tuple, Type, Dict, TypeVar
+from .kernel import Kernel, sign
 
-def algorMeter(algorithms : list[Callable], problems : list[tuple[Callable,list[int]]],  iterations : int = 500, timeout : int = 180, 
+Problem = Type[Kernel]
+Problems = List[Tuple[Problem,List[int]]]
+Algorithm = Callable[[Problem], None]
+Algorithms = List[Algorithm]
+
+
+def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int = 500, timeout : int = 180, 
     tuneParameters : Optional[list] = None,
     runs : int = 1, trace : bool = False, dbprint : bool = False, 
     csv : bool = True, savedata : bool = False,
-    absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
-    '''Benchmark environment for Optimizer algorithms
+    absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> Tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
+    '''Benchmark for Optimizer algorithms
         - algorithms: algorithms list. *(algoList_simple is available )* 
-        - problems: problem list. See problems list in example4.py for syntax.   *(probList_base, probList_covx, probList_DCJBKM are available)*
+        - problems: problem list.   *(probList_base, probList_covx, probList_DCJBKM are available)*
         - tuneParameters = None: see tuneParameters section 
         - iterations = 500: max iterations number 
         - timeout = 180: time out in seconds

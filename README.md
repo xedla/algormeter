@@ -163,7 +163,7 @@ See example3.py
 
 ### dbprint = True
 
-Instruction dbx.print produce print out only if algorMeter call ha option dbprint == True
+Instruction dbx.print produce print out only if algorMeter call has option dbprint == True
 > dbx.print('t:',t, 'Xprev:',Xprev, 'f(Xprev):',p.f(Xprev) ).  
 
 See example3.py  
