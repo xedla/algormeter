@@ -78,6 +78,8 @@ def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int =
                 yield params
         
         def prettyAlgo():
+            if algorithm.__module__ == algorithm.__name__:
+                return algorithm.__name__
             str = algorithm.__module__ + '.' + algorithm.__name__
             t = str.split('.')
             if len(t)>2:
