@@ -136,7 +136,7 @@ class Kernel:
             self.Y = self.data[:,-1] 
     
     def isMinimum(self, x : np.ndarray) -> bool:
-        return bool(abs(self._f(x) - self.optimumValue) < self.absTol)
+        return math.isclose(self._f(x),self.optimumValue, rel_tol = self.relTol, abs_tol = self.absTol)
 
     def f (self, x : np.ndarray) -> np.ndarray :
         return self.f1(x) - self.f2(x)
