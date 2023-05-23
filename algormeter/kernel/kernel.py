@@ -80,7 +80,10 @@ class Kernel:
                 csv :bool = False, relTol : float = 1.E-5, absTol : float = 1.E-8, **kwargs) :
         self.dimension = dimension 
         self.initCache(dimension)
+        self.isTimeout = False
         self.isRandomRun = False
+        self.startTime = tm.default_timer()
+
         self.__inizialize__(dimension)
         '''configure with default value'''
         self.trace = trace
@@ -97,6 +100,7 @@ class Kernel:
         self.isf1_only = 'Kernel' in self._f2.__qualname__ and 'Kernel' in self._gf2.__qualname__
         self.K = -1
         self.Xk = self.XStart
+        self.XStar = np.empty(dimension)
         self.Xprev = self.Xk
         self.fXkPrev = math.inf
         if self.savedata is True:

@@ -1,3 +1,3 @@
-from .algormeter import algorMeter, Param, Algorithms, Algorithm, Problems,Problem
+from .algormeter import algorMeter, Algorithms, Algorithm, Problems,Problem, TuneParameters
 from .perfprof import perfProf
 from algormeter.libs import *

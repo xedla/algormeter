@@ -4,16 +4,18 @@ import pandas as pd
 from algormeter import *
 import algormeter.algorithms as alg
 
-Param.alpha = 1. # type: ignore
-Param.beta = 1. # type: ignore
+alpha = 1. 
+beta = 1. 
 
 def gradient(p, **kwargs):
     for k in p.loop():
-        p.Xkp1 = p.Xk - Param.alpha/(k+1) * p.gfXk / np.linalg.norm(p.gfXk) # type: ignore
+        p.Xkp1 = p.Xk - alpha/(k+1) * p.gfXk / np.linalg.norm(p.gfXk) # type: ignore
+    # print (alpha,beta)
 
-tpar = [ # [name, [values list]]
-    ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
-    # ('Param.beta', [1., 2., 3.]),
+
+tpar : TuneParameters = [ # [name, [values list]]
+    ('alpha', [1. + i for i in np.arange(.05,.9,.05)]),
+    ('beta', [1., 2., 3.]),
 ]
 
 problems : Problems = [
@@ -36,9 +38,9 @@ print('\n', pv)
 
 
 df = dff[dff.Status == 'Success']
-# df = df[ df.Param.str.contains("alpha': 0.3") ]
+# df = df[ df.TuneParams.str.contains("alpha': 0.3") ]
 
-df = df.groupby(['Param','Status',]).agg({'Status':'count','f1':'sum'})
+df = df.groupby(['TuneParams','Status',]).agg({'Status':'count','f1':'sum'})
 df.rename(columns={'Status': 'count'}, inplace=True)
 df = df.sort_values(['count','f1'],ascending=[False, True])
 

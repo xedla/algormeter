@@ -183,18 +183,18 @@ See example3.py
 ### tuneParameters
 Some time is necessary tune some parameter combinations.  Procede as follow (See example4.py):
 
-- Use numeric parameters with Param as domain name, like Param.alpha in your algo code.
+- Define and use module, non locals parameters in your algo code.
 - Define a list of lists with possible values of tuning parameters as follows:
 
 ```python
 tpar = [ # [name, [values list]]
-    ('Param.alpha', [1. + i for i in np.arange(.05,.9,.05)]),
-    # ('Param.beta', [1. + i for i in np.arange(.05,.9,.05)]),
+    ('alpha', [1. + i for i in np.arange(.05,.9,.05)]),
+    # ('beta', [1. + i for i in np.arange(.05,.9,.05)]),
 ]
 ```
 
 - call algorMeter with csv = True and tuneParameters=<list of parameters values> like tuneParameters=tpar.
-- open csv file produced and analyze the performance of parameters combinations by looking column '# tunePar'. Useful is a pivot table on such column.
+- open csv file produced and analyze the performance of parameters combinations by looking column '# TuneParams'. Useful is a pivot table on such columns.
 See example4.py
 ## Random start point 
 
@@ -254,10 +254,6 @@ Running visualizer.py produce or updates contour image in folder 'pics' for each
 - example5.py: multiple run of each problem with random start point
 - example6.py: minimize new problem with algometer algorithm
 
-
-# Acknowledgment
-
-Algormeter was inspired and suggested by prof. Manlio Gaudioso of the University of Calabria and made with him.
 
 # Contributing
 

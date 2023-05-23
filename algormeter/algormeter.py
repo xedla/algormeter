@@ -9,6 +9,8 @@ Created on 9 May 2022
 __all__ = ['algorMeter']
 __author__ = "Pietro d'Alessandro"
 
+import sys
+# from importlib import import_module
 import pandas as pd
 import numpy as np
 from typing import Optional, Callable
@@ -16,8 +18,6 @@ import datetime
 import os
 import __main__
 from algormeter.tools import counter, dbx
-class Param:
-    ...
 
 from typing import Optional, Callable, Any, List, Tuple, Type, Dict, TypeVar
 from .kernel import Kernel, sign
@@ -26,22 +26,23 @@ Problem = Type[Kernel]
 Problems = List[Tuple[Problem,List[int]]]
 Algorithm = Callable[[Problem], None]
 Algorithms = List[Algorithm]
-
+TuneParameters = Optional[List[Tuple[str,List[Any]]]]
 
 def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int = 500, timeout : int = 180, 
-    tuneParameters : Optional[list] = None,
-    runs : int = 1, trace : bool = False, dbprint : bool = False, 
+    tuneParameters : TuneParameters = None,
+    runs : int = 1, 
+    trace : bool = False, dbprint : bool = False, 
     csv : bool = True, savedata : bool = False,
     absTol : float =1.E-4, relTol : float = 1.E-5,  **kwargs) -> Tuple[pd.DataFrame ,pd.DataFrame | np.ndarray] : 
     '''Benchmark for Optimizer algorithms
         - algorithms: algorithms list. *(algoList_simple is available )* 
-        - problems: problem list.   *(probList_base, probList_covx, probList_DCJBKM are available)*
-        - tuneParameters = None: see tuneParameters section 
+        - problems: problems list.   *(probList_base, probList_covx, probList_DCJBKM are available)*
+        - tuneParameters = None: see README tuneParameters section 
         - iterations = 500: max iterations number 
         - timeout = 180: time out in seconds
-        - runs = 1: see random section 
-        - trace = False: see trace section 
-        - dbprint= False: see dbprint section 
+        - runs = 1: see README random section 
+        - trace = False: see README trace section 
+        - dbprint= False: see README dbprint section 
         - csv = True: write a report in csv format in csv folder
         - savedata = False: save data in data folder
         - absTol =1.E-4, relTol = 1.E-5: tolerance used in numpy allClose and isClose
@@ -53,29 +54,28 @@ def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int =
             if not ls:
                 return
             for varName, l in ls:
-                if  'Param' not in varName:
-                    raise ValueError(f'{varName} invalid name. Must be Param.<someparam>')
+                if  type(varName) is not str:
+                    raise ValueError(f'{varName} invalid name. Must be str')
                 if   not len(l):
                     raise ValueError(f'{varName}: empty value list {l}')
 
-        def scanParams(list):
-            def paramStatus():
-                vs = {}
-                for k,e  in vars(Param).items():
-                    if not k.startswith('__'):
-                        vs[k] = e
-                return vs
+        params = {}
+        # algModule = import_module(algorithm.__module__)
+        algModule = sys.modules[algorithm.__module__]
 
+        def scanParams(list):
             if list:
                 varName, ls = list[0]
                 for v in ls:
                     try:
-                        exec(f'{varName}=round({v},5)')
+                        val=round(v,5)
+                        setattr(algModule,varName, val)
+                        params[varName] = val
                     except Exception as e: 
-                        raise ValueError(f'parameter {varName}:',e)
+                        raise ValueError(f'scanning {varName}:',e)
                     yield from scanParams(list[1:])
             else:
-                yield paramStatus()
+                yield params
         
         def prettyAlgo():
             str = algorithm.__module__ + '.' + algorithm.__name__
@@ -120,7 +120,7 @@ def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int =
                             raise e
                     finally:
                         if tuneParameters:
-                            counter.log (str(varStat), 'Param')
+                            counter.log (str(varStat), 'TuneParams')
                         st = p.stats()
                         if excp: st['Status'] = 'Error'
                         stats.append(st)
