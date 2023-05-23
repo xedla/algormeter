@@ -43,11 +43,10 @@ def loadData(funcname):
         raise ValueError('File not found')
     return q,data,x,y
 
-def contour(funcname, rect = None):
+def contour(funcname):
     f, data, x, y = loadData(funcname)
 
-    if rect is None:
-        rect, mM = plotRect(f, data)
+    rect, mM = plotRect(f, data)
     xlist = np.linspace(rect[0][0], rect[1][0],levels)
     ylist = np.linspace(rect[0][1], rect[1][1],levels)
     X,Y = np.meshgrid(xlist, ylist)
