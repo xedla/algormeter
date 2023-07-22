@@ -5,11 +5,11 @@ __author__ = "Pietro d'Alessandro"
 
 import math
 import os
-from typing import Optional, Callable
+from typing import Callable
 import numpy as np
 from numpy import sign
-import timeit  as tm
-from algormeter.tools import counter, dbx
+import time
+from algormeter.tools import counter
 
 class Kernel:
 
@@ -82,7 +82,7 @@ class Kernel:
         self.initCache(dimension)
         self.isTimeout = False
         self.isRandomRun = False
-        self.startTime = tm.default_timer()
+        self.startTime = time.perf_counter()
 
         self.__inizialize__(dimension)
         '''configure with default value'''
@@ -233,7 +233,7 @@ class Kernel:
             self.Y[k] = self._f(self.Xk)
 
     def loop(self):
-        self.startTime = tm.default_timer()
+        self.startTime = time.perf_counter()
         if self.isRandomRun:
             self.randomStartPoint()
         self.isFound = False
@@ -250,7 +250,7 @@ class Kernel:
                 if callable(self.stop) and self.stop():
                     self.isFound = True
                     break
-                if  tm.default_timer() - self.startTime > self.timeout:
+                if  time.perf_counter() - self.startTime > self.timeout:
                     self.isTimeout = True
                     break
                 self.fXkPrev = self._f(self.Xk) 
@@ -302,7 +302,7 @@ class Kernel:
                 "f(XStar)": f'{float(self.f(self.XStar)):.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
                 'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.1E}',
-                "Seconds" :f'{(tm.default_timer() - self.startTime):.4f}',
+                "Seconds" :f'{(time.perf_counter() - self.startTime):.4f}',
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
                 "Start point": self._pp(self.XStart),
