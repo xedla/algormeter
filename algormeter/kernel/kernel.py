@@ -50,7 +50,7 @@ class Kernel:
         counter.up(label) # not in cache, count it
         if flags: # but x is present in cache
             self.lru[i] = self.ccc 
-            newMask = int(self.FLAGS[i]) | mask
+            newMask = self.FLAGS[i].astype(int) | mask
         else: # x is not present in cache
             newMask = mask
             i = np.argmin(self.lru)
@@ -70,7 +70,7 @@ class Kernel:
         for i in np.where(self.norms==nx)[0]:
             if np.all(self.XC[i]==x):
                 r = i
-                flags = int(self.FLAGS[r]) 
+                flags = self.FLAGS[r].astype(int) 
                 break
             
         return r, flags # flags is None if x not exist in cache
@@ -295,13 +295,15 @@ class Kernel:
                 return 'MaxIter'
             return 'Fail'
         counter.disable()
+        fxstar = float((self.f(self.XStar))[0].astype(float))
+        # fxstar = 1.1
         stat = {"Problem" : str(self),
                 "Dim": self.dimension,
                 "Status":expStatus(),
                 "Iterations": int(self.K),
-                "f(XStar)": f'{float(self.f(self.XStar)):.7G}',
+                "f(XStar)": f'{fxstar:.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
-                'Delta': f'{(abs(self.optimumValue-float(self.f(self.XStar)))):.1E}',
+                'Delta': f'{(abs(self.optimumValue-fxstar)):.1E}',
                 "Seconds" :f'{(time.perf_counter() - self.startTime):.4f}',
                 "XStar": self._pp(self.XStar),
                 "BKXStar":  self._pp(self.optimumPoint),
