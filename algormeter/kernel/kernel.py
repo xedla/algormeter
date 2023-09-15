@@ -9,7 +9,7 @@ from typing import Callable
 import numpy as np
 from numpy import sign
 import time
-from algormeter.tools import counter
+from algormeter.tools import counter, dbx
 
 class Kernel:
 
@@ -313,13 +313,21 @@ class Kernel:
         counter.enable()
         return stat
 
-    def minimize(self,algorithm : Callable, iterations : int = 500, trace : bool = False, dbprint: bool = False, **kargs) -> tuple[bool, np.ndarray , np.ndarray]:
+    def minimize(self,algorithm : Callable,*, iterations : int = 500, 
+                 absTol : float =1.E-4, relTol : float = 1.E-5,
+                 startPoint: np.ndarray | None = None,
+                 trace : bool = False, dbprint: bool = False, **kargs) -> tuple[bool, np.ndarray , np.ndarray]:
         '''Find  minimum of a problem/function by applying an algorithm developed with algormeter.
             returns (Success, X, f(X))
         '''
         self.maxiterations = iterations
         self.trace = trace
-        algorithm(self,**kargs)
+        dbx.dbON(dbprint)
+        self.absTol = absTol
+        self.relTol = relTol
+        if startPoint is not None:
+            self.XStart = startPoint 
+        algorithm(self, **kargs)
         return self.isFound, self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
@@ -343,9 +351,9 @@ class Kernel:
         CB = '\033[102m'
         CE = '\033[0m'
         if self.isf1_only:
-            print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))}',CE)
+            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))}',CE)
         else:
-            print(CB,f'{repr(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
+            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
 
     def __str__ (self):
         return self.__class__.__name__

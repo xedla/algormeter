@@ -7,7 +7,7 @@ class MyProb (Kernel):
     def __inizialize__(self, dimension):
         self.XStart = np.ones(dimension)*K #  K param
     def _f1(self, x):
-        return np.sum(np.array(x)**2) 
+        return np.sum(np.array(x,dtype=float)**2) 
     def _gf1(self, x):
         return 2.*x
     def _f2(self,x) :

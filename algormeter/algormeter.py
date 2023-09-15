@@ -28,7 +28,7 @@ Algorithm = Callable[[Problem], None]
 Algorithms = List[Algorithm]
 TuneParameters = Optional[List[Tuple[str,List[Any]]]]
 
-def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int = 500, timeout : int = 180, 
+def algorMeter(algorithms : Algorithms, problems : Problems, *, iterations : int = 500, timeout : int = 180, 
     tuneParameters : TuneParameters = None,
     runs : int = 1, 
     trace : bool = False, dbprint : bool = False, 
@@ -142,7 +142,7 @@ def algorMeter(algorithms : Algorithms, problems : Problems,  iterations : int =
 
 
     np.set_printoptions(precision=7)
-    dbx._DBPRINT = dbprint
+    dbx.dbON(dbprint)
 
     dfl = []
     for exp in problems:

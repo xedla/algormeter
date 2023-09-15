@@ -12,7 +12,7 @@ class Smooth (Kernel):
         self.XStart = np.ones(dimension)*2 # (1,1, ...,1)
 
     def _f1(self, x):
-        return np.sum(np.array(x)**2)
+        return np.sum(np.array(x,dtype=float)**2)
     
     def _gf1(self, x):
         return 2.*x
@@ -42,13 +42,13 @@ class ParAbs (Kernel):
         self.XStart = np.ones(self.dimension)*.1 # (1,1, ...,1)
 
     def _f1(self, x : list):
-        return np.sum(np.array(x)**2)
+        return np.sum(np.array(x,dtype=float)**2)
     
     def _gf1(self, x):
         return 2.*x
     
     def _f2(self,x : list):
-        return np.sum(abs(np.array(x)))
+        return np.sum(abs(np.array(x,dtype=float)))
 
     def _gf2(self, x):
         return np.sign(np.array(x))

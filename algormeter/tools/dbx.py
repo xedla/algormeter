@@ -4,6 +4,9 @@ import builtins as __builtin__
 
 _DBPRINT = False
 
+def dbON(status : bool = True) -> None:
+    _DBPRINT = status
+
 def print(*args, **kwargs) -> None:
     if _DBPRINT:
         stack = inspect.stack()
