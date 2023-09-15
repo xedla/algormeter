@@ -5,6 +5,7 @@ import builtins as __builtin__
 _DBPRINT = False
 
 def dbON(status : bool = True) -> None:
+    global _DBPRINT 
     _DBPRINT = status
 
 def print(*args, **kwargs) -> None:
