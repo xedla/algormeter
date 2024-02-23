@@ -61,6 +61,7 @@ class ParAbs (Kernel):
             return True
         return False
 
+SqrAbs = ParAbs
     
 class Acad (Kernel):
     '''
@@ -74,7 +75,7 @@ class Acad (Kernel):
         self.optimumPoint = np.array([-1.,-1])
         self.optimumValue = -2.0
         self.randomSet(0.,3) # XStart in [-1.5...1.5, -1.5...1.5,]
-        self.XStart = np.ones(self.dimension)*.1 
+        # self.XStart = np.ones(self.dimension)*.1 
         self.XStart = np.array([+.7, -1.3])
 
     def _f1(self, x : list) -> float:

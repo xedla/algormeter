@@ -13,17 +13,16 @@ import sys
 # from importlib import import_module
 import pandas as pd
 import numpy as np
-from typing import Optional, Callable
+from typing import Optional, Callable, Any, List, Tuple, Type, Dict, TypeVar,Sequence
 import datetime
 import os
 import __main__
 from algormeter.tools import counter, dbx
 
-from typing import Optional, Callable, Any, List, Tuple, Type, Dict, TypeVar
 from .kernel import Kernel, sign
 
 Problem = Type[Kernel]
-Problems = List[Tuple[Problem,List[int]]]
+Problems = Sequence[Tuple[Problem,List[int]]]
 Algorithm = Callable[[Problem], None]
 Algorithms = List[Algorithm]
 TuneParameters = Optional[List[Tuple[str,List[Any]]]]
