@@ -83,6 +83,7 @@ class Kernel:
         self.isTimeout = False
         self.isRandomRun = False
         self.startTime = time.perf_counter()
+        self.XStart = np.zeros(dimension)
 
         self.__inizialize__(dimension)
         '''configure with default value'''
