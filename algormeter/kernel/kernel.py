@@ -248,7 +248,7 @@ class Kernel:
             for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
-                if callable(self.stop) and self.stop():
+                if callable(self.stop) and self.stop() :
                     self.isFound = True
                     break
                 if  time.perf_counter() - self.startTime > self.timeout:
@@ -257,8 +257,8 @@ class Kernel:
                 self.fXkPrev = self._f(self.Xk) 
         finally:
             self.recalc(self.Xkp1)
-            if  self.K <= self.maxiterations or self.stop():
-                self.isFound = True
+            if  self.K >= self.maxiterations:
+                self.isFound = False
             
             self.XStar = self.Xk
 
@@ -329,6 +329,7 @@ class Kernel:
         if startPoint is not None:
             self.XStart = startPoint 
         algorithm(self, **kargs)
+        print('iterations:',self.K)
         return self.isFound, self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
