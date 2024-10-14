@@ -329,7 +329,6 @@ class Kernel:
         if startPoint is not None:
             self.XStart = startPoint 
         algorithm(self, **kargs)
-        print('iterations:',self.K)
         return self.isFound, self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
