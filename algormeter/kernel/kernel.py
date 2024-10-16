@@ -259,6 +259,9 @@ class Kernel:
             self.recalc(self.Xkp1)
             if  self.K >= self.maxiterations:
                 self.isFound = False
+            else:
+                self.isFound = True
+
             
             self.XStar = self.Xk
 
