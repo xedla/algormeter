@@ -248,21 +248,17 @@ class Kernel:
             for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
-                if callable(self.stop) and self.stop() :
-                    self.isFound = True
+                if  self.K >= self.maxiterations:
+                    self.isFound = False
+                    break
+                if callable(self.stop):
+                    self.isFound = self.stop()
                     break
                 if  time.perf_counter() - self.startTime > self.timeout:
                     self.isTimeout = True
                     break
                 self.fXkPrev = self._f(self.Xk) 
         finally:
-            self.recalc(self.Xkp1)
-            if  self.K >= self.maxiterations:
-                self.isFound = False
-            else:
-                self.isFound = True
-
-            
             self.XStar = self.Xk
 
             if self.savedata:
