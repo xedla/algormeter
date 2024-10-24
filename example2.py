@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from algormeter import *
 from algormeter.algorithms import *
 
-algorithms :Algorithms = [
+algorithms = [
                 harmonicGradient,
                 sqrtGradient,
                 logGradient,

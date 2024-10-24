@@ -19,7 +19,7 @@ import os
 import __main__
 from algormeter.tools import counter, dbx
 
-from .kernel import Kernel, sign
+from .kernel import Kernel
 
 Problem = Type[Kernel]
 Problems = Sequence[Tuple[Problem,List[int]]]

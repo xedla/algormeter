@@ -1,1 +1,1 @@
-from .kernel import Kernel, sign
+from .kernel import sign, Kernel

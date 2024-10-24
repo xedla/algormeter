@@ -7,9 +7,9 @@ import math
 import os
 from typing import Callable
 import numpy as np
-from numpy import sign
 import time
 from algormeter.tools import counter, dbx
+from numpy import sign
 
 class Kernel:
 
@@ -185,7 +185,6 @@ class Kernel:
     def gfXk(self):
         return self.gf1Xk - self.gf2Xk
 
-## loop
         
     def traceLine(self):
         if not self.trace:
@@ -372,7 +371,7 @@ class Kernel:
         return r
     
 # def sign(x):
-#     # return np.sign(x)
+#     return np.sign(x)
 #     if type(x) == np.ndarray:
 #         return 2. * ( x >= 0.) - 1.
 #     return 1. if x >= 0. else -1.

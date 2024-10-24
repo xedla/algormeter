@@ -1,4 +1,3 @@
-# dbx.print trace counter.up, override stop, break
 
 from algormeter import *
 from numpy.linalg import norm
