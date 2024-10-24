@@ -193,12 +193,12 @@ class Kernel:
 
         fXk = self._f(self.Xk)
         if self.K == 0:
-            CB = '\033[47m'
+            CB = '\033[1;47m'
             self.fXkPrev = fXk
         elif self.fXkPrev > fXk:
-            CB = '\033[102m' # green
+            CB = '\033[1;102m' # green - decrease
         else:
-            CB = '\033[103m' # yellow
+            CB = '\033[1;101m' # yellow - not decrease
         CE = '\033[0m'
         
         if self.K == 0: print()
@@ -237,7 +237,7 @@ class Kernel:
         self.startTime = time.perf_counter()
         if self.isRandomRun:
             self.randomStartPoint()
-        self.isFound = False
+        self.isFound = True
         self.isTimeout = False
         self.XStar = self.XStart
         self.Xk = self.XStart
@@ -248,18 +248,20 @@ class Kernel:
             for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
+                self.isFound = self.stop()
+                if self.isFound:
+                    break
                 if  self.K >= self.maxiterations:
                     self.isFound = False
-                    break
-                if callable(self.stop):
-                    self.isFound = self.stop()
                     break
                 if  time.perf_counter() - self.startTime > self.timeout:
                     self.isTimeout = True
                     break
                 self.fXkPrev = self._f(self.Xk) 
         finally:
+            self.isFound = self.stop()
             self.XStar = self.Xk
+            self.recalc(self.XStar)
 
             if self.savedata:
                 self.data.resize(self.K,self.dimension+1,refcheck=False)
