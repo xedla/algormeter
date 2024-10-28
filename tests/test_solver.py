@@ -13,7 +13,7 @@ A = array([1., 1., 1.])
 b = array([1.])
 
 def test_solver():
-    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore") 
 
     x = solve_qp(P, q, G, h, A, b, solver="scs")
     # print(f"QP solution: x = {x}")
