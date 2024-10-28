@@ -17,8 +17,7 @@ from typing import Optional, Callable, Any, List, Tuple, Type, Dict, TypeVar,Seq
 import datetime
 import os
 import __main__
-from algormeter.tools import counter, dbx
-
+from .tools import counter, dbx
 from .kernel import Kernel
 
 Problem = Type[Kernel]

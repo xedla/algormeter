@@ -1,4 +1,3 @@
-
 from algormeter import *
 from numpy.linalg import norm
 from math import sqrt
@@ -25,7 +24,7 @@ def NSBB(p, **kwargs):
 
     def halt():
         return np.isclose(p.fXk,p.optimumValue,atol=1.E-6) 
-    p.stop = halt
+    p.isHalt = halt
 
     Xprev = p.XStart + .1
     counter.log('hi', 'msg',cls='Welcome')
@@ -38,8 +37,8 @@ def NSBB(p, **kwargs):
         Xprev = p.Xk
 
 df, pv = algorMeter(algorithms = [NSBB], problems = probList_base, iterations = 100,
-                    trace=True,         
-                    dbprint = True 
+                    # trace=True,         
+                    # dbprint = True 
                      )
 
 print('\n', df)

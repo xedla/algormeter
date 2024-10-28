@@ -105,10 +105,10 @@ p1 is a detailed report with the following columns.
 - ... : other columns with count to counter.up utility (see below)
 
 
-## Stop and success condition
+## isHalt and success condition
 
 ```python
-    def stop(self) -> bool:
+    def isHalt(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
         return bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
                   or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
@@ -126,7 +126,7 @@ can be overriden like in
         return status 
         ...
 
-    p.stop = stop
+    p.isHalt = stop
     p.isSuccess = stop
 
 ```
@@ -249,7 +249,7 @@ Running visualizer.py produce or updates contour image in folder 'pics' for each
 
 - example1.py: Simplest possible example 
 - example2.py: Dolan, More performance profile
-- example3.py: dbx.print, trace,counter.up, counter.log, override stop, break  example
+- example3.py: dbx.print, trace,counter.up, counter.log, override isHalt, break  example
 - example4.py: algorithm parameters tuning 
 - example5.py: multiple run of each problem with random start point
 - example6.py: minimize new problem with algometer algorithm

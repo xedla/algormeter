@@ -2,7 +2,7 @@
 '''
 
 import numpy as np
-from algormeter.kernel import *
+from algormeter.kernel import Kernel, sign
 
 
 class Smooth (Kernel):

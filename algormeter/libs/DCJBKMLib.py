@@ -4,7 +4,7 @@ Kaisa Joki, Adil M. Bagirov, Napsu Karmitsa & Marko M. Mäkelä
 '''
 
 import numpy as np
-from algormeter.kernel import *
+from algormeter.kernel import Kernel, sign
 
 class JB01 (Kernel):
     def __inizialize__(self, dimension):

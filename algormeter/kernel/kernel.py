@@ -10,6 +10,25 @@ import numpy as np
 import time
 from algormeter.tools import counter, dbx
 from numpy import sign
+import warnings
+
+
+    # https://gist.github.com/vratiu/9780109 colori
+class Color:
+    Black='\033[1;40m' 
+    Red='\033[1;41m'   
+    Green='\033[1;42m' 
+    Yellow='\033[1;43m'
+    Blue='\033[1;44m'  
+    Purple='\033[1;45m'
+    Cyan='\033[1;46m'  
+    White='\033[1;47m' 
+    Clean='\033[0m' 
+    
+
+
+class AlgorMeterWarning(Warning):
+    pass
 
 class Kernel:
 
@@ -104,6 +123,7 @@ class Kernel:
         self.XStar = np.empty(dimension)
         self.Xprev = self.Xk
         self.fXkPrev = math.inf
+        self.isFound = False
         if self.savedata is True:
             self.data = np.zeros([Kernel.SAVEDATABUFFERSIZE,self.dimension+1]) # +1 per fx
             self.X = self.data[:,:-1] 
@@ -112,7 +132,6 @@ class Kernel:
         counter.reset()
         self.recalc(self.XStart)
 
-    
 
     def __inizialize__(self, dimension : int):
         self.optimumPoint = np.zeros(dimension)
@@ -185,20 +204,22 @@ class Kernel:
     def gfXk(self):
         return self.gf1Xk - self.gf2Xk
 
-        
     def traceLine(self):
-        if not self.trace:
+        if not self.trace or self.K < 0:
             return 
 
         fXk = self._f(self.Xk)
+
         if self.K == 0:
-            CB = '\033[1;47m'
             self.fXkPrev = fXk
+            CB = Color.White #   first iteration
+        elif self.isFound:
+            CB = Color.Blue #  minimum found
         elif self.fXkPrev > fXk:
-            CB = '\033[1;102m' # green - decrease
+            CB = Color.Green # decrease
         else:
-            CB = '\033[1;101m' # yellow - not decrease
-        CE = '\033[0m'
+            CB = Color.Red # not decrease
+        CE = Color.Clean
         
         if self.K == 0: print()
         if self.isf1_only:
@@ -206,14 +227,16 @@ class Kernel:
         else:
             print(CB,f'{self} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
 
+
     def recalc(self,x):
         '''Recalc at step k
         '''
         if not (self.Xk == self.Xprev).all():
             self.fXkPrev = self._f(self.Xk)                
             self.Xprev = self.Xk
-            # if self.fXkPrev > self.f(self.Xk):
-            #     self.fXkPrev = self.f(self.Xk)                
+            fxk = self._f(self.Xk)
+            if (self.K > 1 and self.fXkPrev < fxk):
+                warnings.warn(f'The objective function f has increased in value {self.fXkPrev} -> {fxk} at iteration {self.K}', AlgorMeterWarning)
         
         self.Xk = x
         self.Xkp1 = x
@@ -236,7 +259,7 @@ class Kernel:
         self.startTime = time.perf_counter()
         if self.isRandomRun:
             self.randomStartPoint()
-        self.isFound = True
+        self.isFound = False
         self.isTimeout = False
         self.XStar = self.XStart
         self.Xk = self.XStart
@@ -247,7 +270,7 @@ class Kernel:
             for self.K in range(1,self.maxiterations +1):
                 yield self.K
                 self.recalc(self.Xkp1)
-                self.isFound = self.stop()
+                self.isFound = self.isHalt()
                 if self.isFound:
                     break
                 if  self.K >= self.maxiterations:
@@ -258,7 +281,7 @@ class Kernel:
                     break
                 self.fXkPrev = self._f(self.Xk) 
         finally:
-            self.isFound = self.stop()
+            self.isFound = self.isHalt()
             self.XStar = self.Xk
             self.recalc(self.XStar)
 
@@ -271,12 +294,12 @@ class Kernel:
                 np.save(f'{dir}{label}{repr(self)}',self.data)
 
             if self.trace:
-                print('\n\n')
+                print('\n')
 
-    def stop(self) -> bool:
+    def isHalt(self) -> bool:
         '''return True if experiment must stop. Override it if needed'''
-        if np.array_equal(self.Xk, self.Xprev): # if null step 
-            return False
+        # if np.array_equal(self.Xk, self.Xprev): # if null step 
+        #     return False
 
         rc = bool(np.isclose(self.fXk,self.fXkPrev,rtol=self.relTol,atol=self.absTol)  
                   or np.allclose (self.gfXk,np.zeros(self.dimension),rtol=self.relTol,atol=self.absTol) )
@@ -326,6 +349,7 @@ class Kernel:
         dbx.dbON(dbprint)
         self.absTol = absTol
         self.relTol = relTol
+        self.isFound = False
         if startPoint is not None:
             self.XStart = startPoint 
         algorithm(self, **kargs)
@@ -370,8 +394,7 @@ class Kernel:
         r = np.array2string(s,precision=4,threshold=4)
         return r
     
-# def sign(x):
-#     return np.sign(x)
+# def sign(x) -> bool:
 #     if type(x) == np.ndarray:
-#         return 2. * ( x >= 0.) - 1.
-#     return 1. if x >= 0. else -1.
+#         return bool(np.sign(x))
+#     return True if float(x) >= 0. else False

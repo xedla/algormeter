@@ -1,2 +1,2 @@
 from .algorithms import *
-from ..kernel import *
+from ..kernel.kernel import *
