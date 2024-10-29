@@ -5,7 +5,7 @@ __author__ = "Pietro d'Alessandro"
 
 import math
 import os
-from typing import Callable
+from typing import Callable, Literal, Tuple
 import numpy as np
 import time
 from algormeter.tools import counter, dbx
@@ -309,21 +309,22 @@ class Kernel:
         '''return True if experiment success. Override it if needed'''
         return  self.isMinimum(self.XStar)
 
+    def expStatus(self) -> Literal['Success', 'Timeout', 'MaxIter', 'Fail']:
+        if self.isSuccess():
+            return 'Success'
+        if self.isTimeout:
+            return 'Timeout'
+        if self.K == self.maxiterations:
+            return 'MaxIter'
+        return 'Fail'
+    
     def stats(self):
-        def expStatus():
-            if self.isSuccess():
-                return 'Success'
-            if self.isTimeout:
-                return 'Timeout'
-            if self.K == self.maxiterations:
-                return 'MaxIter'
-            return 'Fail'
         counter.disable()
         fxstar = float((self.f(self.XStar))[0].astype(float))
         # fxstar = 1.1
         stat = {"Problem" : str(self),
                 "Dim": self.dimension,
-                "Status":expStatus(),
+                "Status":self.expStatus(),
                 "Iterations": int(self.K),
                 "f(XStar)": f'{fxstar:.7G}',
                 "f(BKXStar)":  f'{self.optimumValue:.7G}',
@@ -340,10 +341,19 @@ class Kernel:
     def minimize(self,algorithm : Callable,*, iterations : int = 500, 
                  absTol : float =1.E-4, relTol : float = 1.E-5,
                  startPoint: np.ndarray | None = None,
-                 trace : bool = False, dbprint: bool = False, **kargs) -> tuple[bool, np.ndarray , np.ndarray]:
+                 trace : bool = False, dbprint: bool = False, **kargs) -> \
+            Tuple[Literal['Success', 'Timeout', 'MaxIter', 'Fail'], np.ndarray , np.ndarray]:
         '''Find  minimum of a problem/function by applying an algorithm developed with algormeter.
             returns (Success, X, f(X))
         '''
+        def status():
+            if self.isFound:
+                return 'Success'
+            if self.isTimeout:
+                return 'Timeout'
+            if self.K == self.maxiterations:
+                return 'MaxIter'
+            return 'Fail'
         self.maxiterations = iterations
         self.trace = trace
         dbx.dbON(dbprint)
@@ -353,7 +363,7 @@ class Kernel:
         if startPoint is not None:
             self.XStart = startPoint 
         algorithm(self, **kargs)
-        return self.isFound, self.Xk, self.fXk
+        return status(), self.Xk, self.fXk
 
     def setStartPoint(self, startPoint):
         if (len(startPoint) != self.dimension):

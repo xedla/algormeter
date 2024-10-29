@@ -238,7 +238,7 @@ In case you need to find the minimum of a problem/function by applying an algori
 
 ```python
     p = MyProb(K) 
-    found, x, y = p.minimize(myAlgo)
+    result, x, y = p.minimize(myAlgo)
 ```
 
 ## Visualizer.py

@@ -22,10 +22,11 @@ def myAlgo(p, **kwargs):
 
 def test_minimize():
     p = MyProb(K)
-    found, x, y = p.minimize(myAlgo)
-    assert found == True and np.isclose(y,-1.), 'minimize failed'
+    result, x, y = p.minimize(myAlgo)
+    print(result)
+    assert result == 'Success' and np.isclose(y,-1.), 'minimize failed'
 
 def test_minimize_max_iter():
     p = MyProb(K)
-    found, x, y = p.minimize(myAlgo, iterations=10)
-    assert found == False , 'minimize must fail for max iterations'
+    result, x, y = p.minimize(myAlgo, iterations=10)
+    assert result == 'MaxIter' , 'minimize must fail for max iterations'
