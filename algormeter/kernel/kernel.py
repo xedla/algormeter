@@ -158,7 +158,7 @@ class Kernel:
     def isMinimum(self, x : np.ndarray) -> bool:
         return math.isclose(self._f(x),self.optimumValue, rel_tol = self.relTol, abs_tol = self.absTol)
 
-    def f (self, x : np.ndarray) -> np.ndarray :
+    def f (self, x : np.ndarray) -> float :
         return self.f1(x) - self.f2(x)
     def gf (self, x : np.ndarray) -> np.ndarray :
         return self.gf1(x) - self.gf2(x)   
@@ -167,12 +167,12 @@ class Kernel:
     def _gf (self, x : np.ndarray) -> np.ndarray :
         return self._gf1(x) - self._gf2(x)
         
-    def f1 (self, x : np.ndarray ) -> np.ndarray :
-        return self._cacheCall(x,self._f1,self.F1,self.F1Bit, 'f1')
+    def f1 (self, x : np.ndarray ) -> float :
+        return float(self._cacheCall(x,self._f1,self.F1,self.F1Bit, 'f1')[0])
     def gf1 (self, x : np.ndarray) -> np.ndarray :
         return self._cacheCall(x,self._gf1,self.GF1,self.GF1Bit, 'gf1')
-    def f2 (self, x : np.ndarray) -> np.ndarray :
-        return self._cacheCall(x,self._f2,self.F2,self.F2Bit, 'f2')
+    def f2 (self, x : np.ndarray) -> float :
+        return float(self._cacheCall(x,self._f2,self.F2,self.F2Bit, 'f2')[0])
     def gf2 (self, x : np.ndarray) -> np.ndarray :
         return self._cacheCall(x,self._gf2,self.GF2,self.GF2Bit, 'gf2')
 
@@ -223,9 +223,9 @@ class Kernel:
         
         if self.K == 0: print()
         if self.isf1_only:
-            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
+            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk)},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))}',CE)
         else:
-            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk):.3f},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk):.3f},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk):.3f},gf2:{self._pp(self._gf2(self.Xk))}',CE)
+            print(CB,f'{self} k:{self.K},f:{self._f(self.Xk)},x:{self._pp(self.Xk)},gf:{self._pp(self._gf(self.Xk))},f1:{self._f1(self.Xk)},gf1:{self._pp(self._gf1(self.Xk))},f2:{self._f2(self.Xk)},gf2:{self._pp(self._gf2(self.Xk))}',CE)
 
 
     def recalc(self,x):
@@ -320,7 +320,7 @@ class Kernel:
     
     def stats(self):
         counter.disable()
-        fxstar = float((self.f(self.XStar))[0].astype(float))
+        fxstar = float((self.f(self.XStar)))
         # fxstar = 1.1
         stat = {"Problem" : str(self),
                 "Dim": self.dimension,
@@ -342,7 +342,7 @@ class Kernel:
                  absTol : float =1.E-4, relTol : float = 1.E-5,
                  startPoint: np.ndarray | None = None,
                  trace : bool = False, dbprint: bool = False, **kargs) -> \
-            Tuple[Literal['Success', 'Timeout', 'MaxIter', 'Fail'], np.ndarray , np.ndarray]:
+            Tuple[Literal['Success', 'Timeout', 'MaxIter', 'Fail'], np.ndarray , float]:
         '''Find  minimum of a problem/function by applying an algorithm developed with algormeter.
             returns (Success, X, f(X))
         '''
@@ -386,9 +386,9 @@ class Kernel:
         CB = '\033[102m'
         CE = '\033[0m'
         if self.isf1_only:
-            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))}',CE)
+            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x)},gf:{self._pp(self._gf(x))}',CE)
         else:
-            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x):.3f},gf:{self._pp(self._gf(x))},f1:{self._f1(x):.3f},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x):.3f},gf2:{self._pp(self._gf2(x))}',CE)
+            print(CB,f'{str(self)} at x:{self._pp(x)} -> f:{self._f(x)},gf:{self._pp(self._gf(x))},f1:{self._f1(x)},gf1:{self._pp(self._gf1(x))},f2:{self._f2(x)},gf2:{self._pp(self._gf2(x))}',CE)
 
     def __str__ (self):
         return self.__class__.__name__
