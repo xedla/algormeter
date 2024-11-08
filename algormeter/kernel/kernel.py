@@ -6,12 +6,15 @@ __author__ = "Pietro d'Alessandro"
 import math
 import os
 from typing import Callable, Literal, Tuple
+import numpy.typing as npt
 import numpy as np
 import time
 from algormeter.tools import counter, dbx
 from numpy import sign
+
 import warnings
 
+Array1D = npt.NDArray[np.float64]
 
     # https://gist.github.com/vratiu/9780109 colori
 class Color:
@@ -158,31 +161,31 @@ class Kernel:
     def isMinimum(self, x : np.ndarray) -> bool:
         return math.isclose(self._f(x),self.optimumValue, rel_tol = self.relTol, abs_tol = self.absTol)
 
-    def f (self, x : np.ndarray) -> float :
+    def f (self, x : Array1D) -> float :
         return self.f1(x) - self.f2(x)
-    def gf (self, x : np.ndarray) -> np.ndarray :
+    def gf (self, x : Array1D) -> np.ndarray :
         return self.gf1(x) - self.gf2(x)   
-    def _f (self, x : np.ndarray) -> np.ndarray :
+    def _f (self, x : Array1D) -> np.ndarray :
         return self._f1(x) - self._f2(x)
-    def _gf (self, x : np.ndarray) -> np.ndarray :
+    def _gf (self, x : Array1D) -> np.ndarray :
         return self._gf1(x) - self._gf2(x)
         
-    def f1 (self, x : np.ndarray ) -> float :
+    def f1 (self, x : Array1D ) -> float :
         return float(self._cacheCall(x,self._f1,self.F1,self.F1Bit, 'f1')[0])
-    def gf1 (self, x : np.ndarray) -> np.ndarray :
+    def gf1 (self, x : Array1D) -> np.ndarray :
         return self._cacheCall(x,self._gf1,self.GF1,self.GF1Bit, 'gf1')
-    def f2 (self, x : np.ndarray) -> float :
+    def f2 (self, x : Array1D) -> float :
         return float(self._cacheCall(x,self._f2,self.F2,self.F2Bit, 'f2')[0])
-    def gf2 (self, x : np.ndarray) -> np.ndarray :
+    def gf2 (self, x : Array1D) -> Array1D :
         return self._cacheCall(x,self._gf2,self.GF2,self.GF2Bit, 'gf2')
 
-    def _f1 (self, x : np.ndarray) -> np.ndarray :
+    def _f1 (self, x : Array1D) -> Array1D :
         return  np.array(0.)
-    def _gf1 (self, x : np.ndarray) -> np.ndarray :
+    def _gf1 (self, x : Array1D) -> Array1D :
         return np.zeros(self.dimension)
-    def _f2 (self, x : np.ndarray) -> np.ndarray :
+    def _f2 (self, x : Array1D) -> Array1D :
         return  np.array(0.)
-    def _gf2 (self, x : np.ndarray) -> np.ndarray :
+    def _gf2 (self, x : Array1D) -> Array1D :
         return np.zeros(self.dimension)
 
     @property
