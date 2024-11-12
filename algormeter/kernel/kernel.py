@@ -105,7 +105,7 @@ class Kernel:
         self.isTimeout = False
         self.isRandomRun = False
         self.startTime = time.perf_counter()
-        self.XStart = np.zeros(dimension)
+        self.XStart :Array1D = np.zeros(dimension)
 
         self.__inizialize__(dimension)
         '''configure with default value'''
@@ -163,48 +163,48 @@ class Kernel:
 
     def f (self, x : Array1D) -> float :
         return self.f1(x) - self.f2(x)
-    def gf (self, x : Array1D) -> np.ndarray :
+    def gf (self, x : Array1D) -> Array1D :
         return self.gf1(x) - self.gf2(x)   
-    def _f (self, x : Array1D) -> np.ndarray :
+    def _f (self, x : Array1D) -> float :
         return self._f1(x) - self._f2(x)
-    def _gf (self, x : Array1D) -> np.ndarray :
+    def _gf (self, x : Array1D) -> Array1D :
         return self._gf1(x) - self._gf2(x)
         
     def f1 (self, x : Array1D ) -> float :
         return float(self._cacheCall(x,self._f1,self.F1,self.F1Bit, 'f1')[0])
-    def gf1 (self, x : Array1D) -> np.ndarray :
+    def gf1 (self, x : Array1D) -> Array1D :
         return self._cacheCall(x,self._gf1,self.GF1,self.GF1Bit, 'gf1')
     def f2 (self, x : Array1D) -> float :
         return float(self._cacheCall(x,self._f2,self.F2,self.F2Bit, 'f2')[0])
     def gf2 (self, x : Array1D) -> Array1D :
         return self._cacheCall(x,self._gf2,self.GF2,self.GF2Bit, 'gf2')
 
-    def _f1 (self, x : Array1D) -> Array1D :
-        return  np.array(0.)
+    def _f1 (self, x : Array1D) -> float :
+        return  0.
     def _gf1 (self, x : Array1D) -> Array1D :
         return np.zeros(self.dimension)
-    def _f2 (self, x : Array1D) -> Array1D :
-        return  np.array(0.)
+    def _f2 (self, x : Array1D) -> float :
+        return  0.
     def _gf2 (self, x : Array1D) -> Array1D :
         return np.zeros(self.dimension)
 
     @property
-    def f1Xk(self):
+    def f1Xk(self) -> float:
         return self.f1(self.Xk)
     @property
-    def f2Xk(self):
+    def f2Xk(self) -> float:
         return self.f2(self.Xk)
     @property
-    def gf1Xk(self):
+    def gf1Xk(self) -> Array1D:
         return self.gf1(self.Xk)
     @property
-    def gf2Xk(self):
+    def gf2Xk(self) -> Array1D:
         return self.gf2(self.Xk)
     @property
-    def fXk(self):
+    def fXk(self) -> float:
         return self.f1Xk - self.f2Xk
     @property
-    def gfXk(self):
+    def gfXk(self) -> Array1D:
         return self.gf1Xk - self.gf2Xk
 
     def traceLine(self):
@@ -343,9 +343,9 @@ class Kernel:
 
     def minimize(self,algorithm : Callable,*, iterations : int = 500, 
                  absTol : float =1.E-4, relTol : float = 1.E-5,
-                 startPoint: np.ndarray | None = None,
+                 startPoint: Array1D | None = None,
                  trace : bool = False, dbprint: bool = False, **kargs) -> \
-            Tuple[Literal['Success', 'Timeout', 'MaxIter', 'Fail'], np.ndarray , float]:
+            Tuple[Literal['Success', 'Timeout', 'MaxIter', 'Fail'], Array1D , float]:
         '''Find  minimum of a problem/function by applying an algorithm developed with algormeter.
             returns (Success, X, f(X))
         '''
@@ -368,7 +368,7 @@ class Kernel:
         algorithm(self, **kargs)
         return status(), self.Xk, self.fXk
 
-    def setStartPoint(self, startPoint):
+    def setStartPoint(self, startPoint :Array1D):
         if (len(startPoint) != self.dimension):
             raise ValueError('bad dimension')
         self.XStart = np.array(startPoint)
@@ -408,6 +408,6 @@ class Kernel:
         return r
     
 # def sign(x) -> bool:
-#     if type(x) == np.ndarray:
+#     if type(x) == Array1D:
 #         return bool(np.sign(x))
 #     return True if float(x) >= 0. else False

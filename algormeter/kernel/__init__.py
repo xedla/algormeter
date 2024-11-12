@@ -1,1 +1,1 @@
-from .kernel import sign, Kernel, AlgorMeterWarning
+from .kernel import sign, Kernel, AlgorMeterWarning, Array1D

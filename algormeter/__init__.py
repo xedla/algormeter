@@ -2,7 +2,7 @@ import warnings
 
 from .algormeter import algorMeter, Algorithms, Algorithm, Problems,Problem, TuneParameters
 from .perfprof import perfProf
-from .kernel import AlgorMeterWarning
+from .kernel import AlgorMeterWarning, Array1D
 from .libs import *
 
 oldsw = warnings.showwarning
